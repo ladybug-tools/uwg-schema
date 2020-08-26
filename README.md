@@ -5,7 +5,7 @@
 
 # uwg-schema
 
-:city_sunrise: :scroll: Input schema for the Urban Weather Generator (UWG)
+:city_sunrise: :scroll: Input schema for the [Urban Weather Generator (UWG)](https://github.com/ladybug-tools/uwg).
 
 ## Installation
 
