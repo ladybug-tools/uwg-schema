@@ -1,2 +1,1 @@
 """uwg-schema library."""
-
