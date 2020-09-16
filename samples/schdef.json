@@ -559,13 +559,5 @@
             0.15,
             0.15
         ]
-    ],
-    "q_elec": 18.9,
-    "q_gas": 3.2,
-    "q_light": 18.9,
-    "n_occ": 0.12,
-    "vent": 0.0013,
-    "v_swh": 0.2846,
-    "bldtype": "largeoffice",
-    "builtera": "new"
+    ]
 }
