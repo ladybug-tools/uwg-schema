@@ -1,0 +1,6 @@
+{
+    "type": "Material",
+    "name": "insulation",
+    "thermalcond": 0.049,
+    "volheat": 221752.0
+}
