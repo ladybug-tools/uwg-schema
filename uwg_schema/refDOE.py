@@ -1,30 +1,32 @@
 from pydantic import Field, validator, root_validator, constr, conlist
-from typing import List, Union
-
+from typing import List
+from enum import Enum
 
 from ._base import NoExtraBaseModel
+
+WEEK_MATRIX = \
+    conlist(conlist(float, min_items=24, max_items=24), min_items=3, max_items=3)
 
 
 class Material(NoExtraBaseModel):
     """Material class."""
+
     type: constr(regex='^Material$') = 'Material'
 
     thermalcond: float = Field(
         ...,
-        gt=0,
+        #gt=0,
         description='Number for thermal conductivity [W/(m-K)].'
     )
 
     volheat: float = Field(
         ...,
-        gt=0,
+        #gt=0,
         description='Number for volumetric capacity [J/(m3-K)].'
     )
 
     name: str = Field(
         ...,
-        min_length=1,
-        max_length=100,
         name='Text string for name of the Material.'
     )
 
@@ -84,18 +86,16 @@ class Element(NoExtraBaseModel):
 
     name: str = Field(
         ...,
-        min_length=1,
-        max_length=100,
         name='Text string for name of the Element.'
     )
 
     @root_validator
     def check_length(cls, values):
         """Ensure material and thickness list lengths."""
-        thickness_lst = values.get('thickness_lst')
+        thickness_lst = values.get('layer_thickness_lst')
         material_lst = values.get('material_lst')
         assert len(thickness_lst) == len(material_lst), 'The material_lst must ' \
-            'have the same length as the thickness_lst. Got lengths {} and {}, ' \
+            'have the same length as the layer_thickness_lst. Got lengths {} and {}, ' \
             'respectively.'
         return values
 
@@ -114,6 +114,12 @@ class Element(NoExtraBaseModel):
         return values
 
 
+class CondType(str, Enum):
+    """Cooling condensation system type."""
+    air = 'AIR'
+    water = 'WATER'
+
+
 class Building(NoExtraBaseModel):
     """Building object specifies building characteristics."""
 
@@ -128,13 +134,13 @@ class Building(NoExtraBaseModel):
     int_heat_night: float = Field(
         ...,
         ge=0,
-        description='Nighttime internal sensible heat gain[W/m2].
+        description='Nighttime internal sensible heat gain[W/m2].'
     )
 
     int_heat_day: float = Field(
         ...,
         ge=0,
-        description='Daytime internal sensible heat gain[W/m2].
+        description='Daytime internal sensible heat gain[W/m2].'
     )
 
     int_heat_frad: float = Field(
@@ -170,7 +176,7 @@ class Building(NoExtraBaseModel):
         description='Glazing ratio.'
     )
 
-    uvalue: float = Field(
+    u_value: float = Field(
         ...,
         gt=0,
         description='Window U-value including film coefficent [W/(m2-K)].'
@@ -186,7 +192,7 @@ class Building(NoExtraBaseModel):
     condtype: CondType = Field(
         ...,
         description='Text string for cooling condensation system type. Choose '
-        'from: AIR and WATER.'
+        'from: AIR or WATER.'
     )
 
     cop: float = Field(
@@ -239,12 +245,6 @@ class Building(NoExtraBaseModel):
     )
 
 
-class CondType(str, Enum):
-    """Cooling condensation system type."""
-    air = 'AIR'
-    water = 'WATER'
-
-
 class BEMDef(NoExtraBaseModel):
     """Building Energy Model (BEM) definition."""
     type: constr(regex='^BEMDef$') = 'BEMDef'
@@ -272,6 +272,11 @@ class BEMDef(NoExtraBaseModel):
         'object defines in the UWG bld matrix.'
     )
 
+    building: Building = Field(
+        ...,
+        description='Building object.'
+    )
+
     mass: Element = Field(
         ...,
         description='Element object for building internal mass.'
@@ -293,13 +298,6 @@ class BEMDef(NoExtraBaseModel):
         le=1,
         description='Fraction of the urban floor space of this typology.'
     )
-
-
-WEEK_MATRIX = conlist(
-    conlist(float, min_items=24, max_items=24),
-    min_time=3,
-    max_time=3
-)
 
 
 class SchDef(NoExtraBaseModel):
@@ -364,3 +362,15 @@ class SchDef(NoExtraBaseModel):
         ...,
         description='Matrix of numbers for weekly hot water schedule.'
     )
+
+    @root_validator
+    def check_week_matrix_values(cls, values):
+
+        schstrlst = ['elec', 'gas', 'light', 'occ', 'cool', 'heat', 'swh']
+        schlst = [values.get(schstr) for schstr in schstrlst]
+
+        for sch in schlst:
+            _sch = [hr for day in sch for hr in day]
+            assert all(isinstance(v, (float, int)) for v in _sch), \
+                'Every item in {} must be a number.'
+        return values
