@@ -14,6 +14,10 @@
         "shgc": 0.3,
         "condtype": "AIR",
         "cop": 3,
+        "cool_setpoint_day": 297,
+        "cool_setpoint_night": 297,
+        "heat_setpoint_day": 293,
+        "heat_setpoint_night": 293,
         "coolcap": 41,
         "heateff": 0.8,
         "initial_temp": 293
@@ -40,8 +44,8 @@
                 "volheat": 658990.2
             }
         ],
-        "vegcoverage": 0,
-        "t_init": 293,
+        "vegcoverage": 0.0,
+        "t_init": 293.0,
         "horizontal": true,
         "name": "wood_floor"
     },
@@ -74,8 +78,8 @@
                 "volheat": 651467.0
             }
         ],
-        "vegcoverage": 0,
-        "t_init": 293,
+        "vegcoverage": 0.0,
+        "t_init": 293.0,
         "horizontal": false,
         "name": "wood_frame_wall"
     },
@@ -108,8 +112,8 @@
                 "volheat": 651467.0
             }
         ],
-        "vegcoverage": 0,
-        "t_init": 293,
+        "vegcoverage": 0.0,
+        "t_init": 293.0,
         "horizontal": true,
         "name": "wood_frame_roof"
     },
