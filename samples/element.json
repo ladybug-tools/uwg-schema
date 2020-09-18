@@ -1,0 +1,34 @@
+{
+    "type": "Element",
+    "albedo": 0.22,
+    "emissivity": 0.92,
+    "layer_thickness_lst": [
+        0.01,
+        0.01,
+        0.0127
+    ],
+    "material_lst": [
+        {
+            "type": "Material",
+            "name": "wood",
+            "thermalcond": 0.11,
+            "volheat": 658990.2
+        },
+        {
+            "type": "Material",
+            "name": "insulation",
+            "thermalcond": 0.049,
+            "volheat": 221752.0
+        },
+        {
+            "type": "Material",
+            "name": "gypsum",
+            "thermalcond": 0.16,
+            "volheat": 651467.0
+        }
+    ],
+    "vegcoverage": 0.0,
+    "t_init": 293.0,
+    "horizontal": false,
+    "name": "wood_frame_wall"
+}
