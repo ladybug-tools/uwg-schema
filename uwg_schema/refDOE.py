@@ -132,26 +132,26 @@ class Building(NoExtraBaseModel):
     )
 
     int_heat_night: float = Field(
-        ...,
+        1,
         ge=0,
         description='Nighttime internal sensible heat gain[W/m2].'
     )
 
     int_heat_day: float = Field(
-        ...,
+        1,
         ge=0,
         description='Daytime internal sensible heat gain[W/m2].'
     )
 
     int_heat_frad: float = Field(
-        ...,
+        0.1,
         ge=0,
         le=1,
         description='Radiant fraction of internal gains.'
     )
 
     int_heat_flat: float = Field(
-        ...,
+        0.1,
         ge=0,
         le=1,
         description='Latent fraction of internal gains.'
@@ -190,7 +190,7 @@ class Building(NoExtraBaseModel):
     )
 
     condtype: CondType = Field(
-        ...,
+        'AIR',
         description='Text string for cooling condensation system type. Choose '
         'from: AIR or WATER.'
     )
@@ -202,25 +202,25 @@ class Building(NoExtraBaseModel):
     )
 
     cool_setpoint_day: float = Field(
-        ...,
+        297,
         ge=0,
         description='Daytime indoor cooling setpoint [K].'
     )
 
     cool_setpoint_night: float = Field(
-        ...,
+        297,
         ge=0,
         description='Nightime indoor cooling setpoint [K].'
     )
 
     heat_setpoint_day: float = Field(
-        ...,
+        293,
         ge=0,
         description='Daytime indoor heating setpoint [K].'
     )
 
     heat_setpoint_night: float = Field(
-        ...,
+        293,
         ge=0,
         description='Nightime indoor heating setpoint [K].'
     )
@@ -239,7 +239,7 @@ class Building(NoExtraBaseModel):
     )
 
     initial_temp: float = Field(
-        ...,
+        291,
         ge=0,
         description='Initial indoor air temperature [K].'
     )
@@ -293,7 +293,7 @@ class BEMDef(NoExtraBaseModel):
     )
 
     frac: float = Field(
-        ...,
+        0,
         ge=0,
         le=1,
         description='Fraction of the urban floor space of this typology.'
