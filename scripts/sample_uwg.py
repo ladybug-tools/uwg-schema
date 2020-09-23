@@ -55,7 +55,8 @@ def schdef(directory):
     default_week = [[0.15] * 24] * 3
     schdef = SchDef(elec=default_week, gas=default_week, light=default_week,
                     occ=default_week, cool=default_week, heat=default_week,
-                    swh=default_week, bldtype=5, builtera=2)
+                    swh=default_week, q_elec=18.9, q_gas=3.2, q_light=18.9,
+                    n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=5, builtera=2)
 
     with open(dest_file, 'w') as fp:
         json.dump(schdef.to_dict(), fp, indent=4)
@@ -93,9 +94,9 @@ def bemdef(directory):
 
 def uwg(directory):
     """Generate UWg json."""
-
+    epw_path = './tests/epw/SGP_Singapore.486980_IWEC.epw'
     model = UWG.from_param_args(
-        epw_path='fake/epw/path/', bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1)
+        epw_path=epw_path, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1)
 
     dest_file = os.path.join(directory, 'uwg.json')
     with open(dest_file, 'w') as fp:
@@ -111,11 +112,13 @@ def custom_uwg(directory):
     default_week = [[0.15] * 24] * 3
     schdef1 = SchDef(elec=default_week, gas=default_week, light=default_week,
                      occ=default_week, cool=default_week, heat=default_week,
-                     swh=default_week, bldtype=5, builtera=2)
+                     swh=default_week, q_elec=18.9, q_gas=3.2, q_light=18.9,
+                     n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=5, builtera=2)
     default_week = [[0.35] * 24] * 3
     schdef2 = SchDef(elec=default_week, gas=default_week, light=default_week,
                      occ=default_week, cool=default_week, heat=default_week,
-                     swh=default_week, bldtype=16, builtera=2)
+                     swh=default_week,  q_elec=18.9, q_gas=3.2, q_light=18.9,
+                     n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=16, builtera=2)
 
     # BEMDedf
 
@@ -165,8 +168,9 @@ def custom_uwg(directory):
            [0, 0, 0],  # Warehouse
            [0, 0, 0.1]]  # Custom bldtype
 
+    epw_path = './tests/epw/SGP_Singapore.486980_IWEC.epw'
     model = UWG.from_param_args(
-        epw_path='fake/epw/path/', bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1,
+        epw_path=epw_path, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1,
         bld=bld, ref_bem_vector=ref_bem_vector, ref_sch_vector=ref_sch_vector)
 
     dest_file = os.path.join(directory, 'custom_uwg.json')
