@@ -1,6 +1,6 @@
 {
     "type": "UWG",
-    "epw_path": "fake/epw/path/",
+    "epw_path": "./tests/epw/SGP_Singapore.486980_IWEC.epw",
     "new_epw_dir": null,
     "new_epw_name": null,
     "month": 1,
