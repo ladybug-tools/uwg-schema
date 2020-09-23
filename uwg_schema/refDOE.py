@@ -134,27 +134,27 @@ class Building(NoExtraBaseModel):
     int_heat_night: float = Field(
         1,
         ge=0,
-        description='Nighttime internal sensible heat gain[W/m2].'
+        description='Nighttime internal sensible heat gain [W/m2].'
     )
 
     int_heat_day: float = Field(
         1,
         ge=0,
-        description='Daytime internal sensible heat gain[W/m2].'
+        description='Daytime internal sensible heat gain [W/m2].'
     )
 
     int_heat_frad: float = Field(
         0.1,
         ge=0,
         le=1,
-        description='Radiant fraction of internal gains.'
+        description='Value between 0 and 1 for radiant fraction of internal gains.'
     )
 
     int_heat_flat: float = Field(
         0.1,
         ge=0,
         le=1,
-        description='Latent fraction of internal gains.'
+        description='Value between 0 and 1 for latent fraction of internal gains.'
     )
 
     infil: float = Field(
@@ -173,7 +173,7 @@ class Building(NoExtraBaseModel):
         ...,
         ge=0,
         le=1,
-        description='Glazing ratio.'
+        description='Value between 0 and 1 for glazing ratio.'
     )
 
     u_value: float = Field(
@@ -186,7 +186,7 @@ class Building(NoExtraBaseModel):
         ...,
         ge=0,
         le=1,
-        description='Window Solar Heat Gain Coefficient (SHGC).'
+        description='Value between 0 and 1 for window Solar Heat Gain Coefficient (SHGC).'
     )
 
     condtype: CondType = Field(
@@ -361,6 +361,45 @@ class SchDef(NoExtraBaseModel):
     swh: WEEK_MATRIX = Field(
         ...,
         description='Matrix of numbers for weekly hot water schedule.'
+    )
+
+    q_elec: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum electrical plug process load [W/m2].'
+    )
+
+    q_gas: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum gas process load per unit area [W/m2].'
+    )
+
+    q_light: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum light process load per unit area '
+        '[W/m2].'
+    )
+
+    n_occ: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum number of occupants per unit area '
+        '[person/m2].'
+    )
+
+    vent: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum ventilation rate per unit area '
+        '[m3/s/m2].'
+    )
+
+    v_swh: float = Field(
+        ...,
+        ge=0,
+        description='Numerical value for maximum hot water rate per unit area [L/hr/m2].'
     )
 
     @root_validator
