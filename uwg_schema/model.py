@@ -26,37 +26,22 @@ class UWG(NoExtraBaseModel):
 
     epw_path: str = Field(
         ...,
-        description='Text string for the name of the rural epw file that will '
+        description='Text string for full path of the rural .epw file that will '
         'be morphed.'
-    )
-
-    new_epw_name: str = Field(
-        default=None,
-        description='Optional destination file name for the morphed EPW file. If None '
-        'the morphed file will append "_UWG" to the original file name.'
     )
 
     new_epw_dir: str = Field(
         default=None,
-        description='Optional text string destination directory for the morphed '
-        'EPW file. If None the morphed file will be written into the same directory '
-        'as the rural EPW file.'
+        description='Optional text string for the destination directory into '
+        'which the morphed .epw file is written. If None the morphed file will be '
+        'written into the same directory as the rural .epw file.'
     )
 
-    ref_sch_vector: List[SchDef] = Field(
+    new_epw_name: str = Field(
         default=None,
-        description='Optional list of custom SchDef objects to override or add to '
-        'the refSchedule matrix according to the SchDef bldtype and builtera values.'
-        'If value is None, all BEMDef objects are referenced from the DOE typologies '
-        'defined by default in the refBEM matrix.'
-    )
-
-    ref_bem_vector: List[BEMDef] = Field(
-        default=None,
-        description='Optional list of custom BEMDef objects to override or add to '
-        'the refBEM matrix according to the BEMDef bldtype and builtera values. '
-        'If value is None, all SchDef objects are referenced from the DOE typologies '
-        'defined by default in the refSch matrix.'
+        description='Optional text string for the destination file name of the '
+        'morphed .epw file. If None the morphed file will append "_UWG" to the '
+        'original file name.'
     )
 
     month: int = Field(
@@ -424,4 +409,20 @@ class UWG(NoExtraBaseModel):
         ge=0,
         description='Average building floor height in meters. If value is None, a '
         'unique flr_h is set for each building from the refBEM.'
+    )
+
+    ref_sch_vector: List[SchDef] = Field(
+        default=None,
+        description='Optional list of custom SchDef objects to override or add to '
+        'the refSchedule matrix according to the SchDef bldtype and builtera values.'
+        'If value is None, all BEMDef objects are referenced from the DOE typologies '
+        'defined by default in the refBEM matrix.'
+    )
+
+    ref_bem_vector: List[BEMDef] = Field(
+        default=None,
+        description='Optional list of custom BEMDef objects to override or add to '
+        'the refBEM matrix according to the BEMDef bldtype and builtera values. '
+        'If value is None, all SchDef objects are referenced from the DOE typologies '
+        'defined by default in the refSch matrix.'
     )
