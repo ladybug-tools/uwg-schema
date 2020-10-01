@@ -44,8 +44,8 @@
                 "volheat": 658990.2
             }
         ],
-        "vegcoverage": 0.0,
-        "t_init": 293.0,
+        "vegcoverage": 0,
+        "t_init": 293,
         "horizontal": true,
         "name": "wood_floor"
     },
@@ -78,8 +78,8 @@
                 "volheat": 651467.0
             }
         ],
-        "vegcoverage": 0.0,
-        "t_init": 293.0,
+        "vegcoverage": 0,
+        "t_init": 293,
         "horizontal": false,
         "name": "wood_frame_wall"
     },
@@ -112,8 +112,8 @@
                 "volheat": 651467.0
             }
         ],
-        "vegcoverage": 0.0,
-        "t_init": 293.0,
+        "vegcoverage": 0,
+        "t_init": 293,
         "horizontal": true,
         "name": "wood_frame_roof"
     },
