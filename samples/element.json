@@ -27,8 +27,8 @@
             "volheat": 651467.0
         }
     ],
-    "vegcoverage": 0.0,
-    "t_init": 293.0,
+    "vegcoverage": 0,
+    "t_init": 293,
     "horizontal": false,
     "name": "wood_frame_wall"
 }

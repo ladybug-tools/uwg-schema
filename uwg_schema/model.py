@@ -141,13 +141,13 @@ class UWG(NoExtraBaseModel):
     c_circ: float = Field(
         ...,
         ge=0,
-        description='Microclimate circulation coefficient.'
+        description='Microclimate wind scaling coefficient.'
     )
 
     c_exch: float = Field(
         ...,
         ge=0,
-        description='Microclimate exchange coefficient.'
+        description='Microclimate exchange velocity coefficient.'
     )
 
     maxday: float = Field(
@@ -299,14 +299,14 @@ class UWG(NoExtraBaseModel):
         'are assumed to fall.'
     )
 
-    vegcover: float = Field(
+    grasscover: float = Field(
         ...,
         ge=0,
         le=1,
         description='Number for fraction of urban ground covered in grass only'
     )
 
-    treecoverage: float = Field(
+    treecover: float = Field(
         ...,
         ge=0,
         le=1,
