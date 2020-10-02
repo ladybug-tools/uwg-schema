@@ -41,14 +41,14 @@ class UWG(NoExtraBaseModel):
         ...,
         ge=0,
         le=12,
-        description='Number (1-12) as simulation start month.'
+        description='Number (1-12) representing simulation start month.'
     )
 
     day: int = Field(
         ...,
         ge=1,
         le=31,
-        description='Number (1-31) as simulation start day.'
+        description='Number (1-31) representing simulation start day.'
     )
 
     nday: int = Field(
@@ -77,7 +77,7 @@ class UWG(NoExtraBaseModel):
     sensocc: float = Field(
         ...,
         ge=0,
-        description='Sensible heat in Watts from occupant.'
+        description='Sensible heat from occupant [W].'
     )
 
     latfocc: float = Field(
@@ -123,51 +123,51 @@ class UWG(NoExtraBaseModel):
     h_ref: float = Field(
         ...,
         ge=0,
-        description='Microclimate inversion height in meters.'
+        description='Inversion height in meters.'
     )
 
     h_temp: float = Field(
         ...,
         ge=0,
-        description='Microclimate temperature height in meters.'
+        description='Temperature measurement height in meters.'
     )
 
     h_wind: float = Field(
         ...,
         ge=0,
-        description='Microclimate wind height in meters.'
+        description='Wind height in meters.'
     )
 
     c_circ: float = Field(
         ...,
         ge=0,
-        description='Microclimate wind scaling coefficient.'
+        description='Wind scaling coefficient.'
     )
 
     c_exch: float = Field(
         ...,
         ge=0,
-        description='Microclimate exchange velocity coefficient.'
+        description='Exchange velocity coefficient.'
     )
 
     maxday: float = Field(
         ...,
         ge=0,
-        description='Value for maximum heat flux threshold for microclimate daytime '
+        description='Value for maximum heat flux threshold for daytime '
         'conditions [W/m2].'
     )
 
     maxnight: float = Field(
         ...,
         ge=0,
-        description='Value for maximum heat flux threshold for microclimate nighttime '
+        description='Value for maximum heat flux threshold for nighttime '
         'conditions [W/m2].'
     )
 
     windmin: float = Field(
         ...,
         ge=0,
-        description='Value for microclimate minimum wind speed in m/s.'
+        description='Value for minimum wind speed in m/s.'
     )
 
     h_obs: float = Field(
@@ -303,7 +303,7 @@ class UWG(NoExtraBaseModel):
         ...,
         ge=0,
         le=1,
-        description='Number for fraction of urban ground covered in grass only'
+        description='Number for fraction of urban ground covered in grass only.'
     )
 
     treecover: float = Field(
