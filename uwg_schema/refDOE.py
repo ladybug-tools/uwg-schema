@@ -15,13 +15,13 @@ class Material(NoExtraBaseModel):
 
     thermalcond: float = Field(
         ...,
-        #gt=0,
+        gt=0,
         description='Number for thermal conductivity [W/(m-K)].'
     )
 
     volheat: float = Field(
         ...,
-        #gt=0,
+        gt=0,
         description='Number for volumetric capacity [J/(m3-K)].'
     )
 
