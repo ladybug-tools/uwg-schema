@@ -3,7 +3,7 @@ from pydantic import Field, validator, constr, conlist
 from typing import List
 
 from ._base import NoExtraBaseModel
-from .refDOE import BEMDef, SchDef, WEEK_MATRIX
+from .ref_bldg_template import BEMDef, SchDef, WEEK_MATRIX
 
 
 class UWG(NoExtraBaseModel):
@@ -253,7 +253,8 @@ class UWG(NoExtraBaseModel):
         """Ensure bld matrix dimensions."""
         for i in range(len(value)):
             assert len(value[i]) == 3, 'The bld property must be a 16 (or greater) ' \
-                'x 3 matrix. Got {} columns for the row {}.'.format(len(value[i]), i)
+                'x 3 matrix. Got {} columns for the row {}.'.format(
+                    len(value[i]), i)
         return value
 
     lattree: float = Field(
