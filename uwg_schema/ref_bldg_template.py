@@ -201,30 +201,6 @@ class Building(NoExtraBaseModel):
         description='COP of cooling system (nominal).'
     )
 
-    cool_setpoint_day: float = Field(
-        297,
-        ge=0,
-        description='Daytime indoor cooling setpoint [K].'
-    )
-
-    cool_setpoint_night: float = Field(
-        297,
-        ge=0,
-        description='Nightime indoor cooling setpoint [K].'
-    )
-
-    heat_setpoint_day: float = Field(
-        293,
-        ge=0,
-        description='Daytime indoor heating setpoint [K].'
-    )
-
-    heat_setpoint_night: float = Field(
-        293,
-        ge=0,
-        description='Nightime indoor heating setpoint [K].'
-    )
-
     coolcap: float = Field(
         ...,
         ge=0,
@@ -334,7 +310,7 @@ class SchDef(NoExtraBaseModel):
             )
 
     gas: WEEK_MATRIX = Field(
-        ...,
+        default=[[0 for j in range(24)] for i in range(3)],
         description='Matrix of numbers for weekly gas schedule.'
     )
 
@@ -359,7 +335,7 @@ class SchDef(NoExtraBaseModel):
     )
 
     swh: WEEK_MATRIX = Field(
-        ...,
+        default=[[0 for j in range(24)] for i in range(3)],
         description='Matrix of numbers for weekly hot water schedule.'
     )
 
@@ -370,7 +346,7 @@ class SchDef(NoExtraBaseModel):
     )
 
     q_gas: float = Field(
-        ...,
+        0,
         ge=0,
         description='Numerical value for maximum gas process load per unit area [W/m2].'
     )
@@ -397,7 +373,7 @@ class SchDef(NoExtraBaseModel):
     )
 
     v_swh: float = Field(
-        ...,
+        0,
         ge=0,
         description='Numerical value for maximum hot water rate per unit area [L/hr/m2].'
     )

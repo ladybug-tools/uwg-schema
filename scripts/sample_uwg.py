@@ -9,7 +9,8 @@ def material(directory):
     """Generate Material json."""
 
     dest_file = os.path.join(directory, 'material.json')
-    insul = Material(thermalcond=0.049, volheat=836.8 * 265.0, name='insulation')
+    insul = Material(thermalcond=0.049, volheat=836.8 *
+                     265.0, name='insulation')
 
     with open(dest_file, 'w') as fp:
         json.dump(insul.to_dict(), fp, indent=4)
@@ -40,9 +41,7 @@ def building(directory):
     bldg = Building(
         floor_height=3.0, int_heat_night=1, int_heat_day=1, int_heat_frad=0.1,
         int_heat_flat=0.1, infil=0.171, vent=0.00045, glazing_ratio=0.4, u_value=3.0,
-        shgc=0.3, condtype='AIR', cop=3, cool_setpoint_day=297, cool_setpoint_night=297,
-        heat_setpoint_day=293, heat_setpoint_night=293, coolcap=41, heateff=0.8,
-        initial_temp=293)
+        shgc=0.3, condtype='AIR', cop=3, coolcap=41, heateff=0.8, initial_temp=293)
 
     with open(dest_file, 'w') as fp:
         json.dump(bldg.to_dict(), fp, indent=4)
@@ -75,15 +74,14 @@ def bemdef(directory):
                    False, 'wood_frame_wall')
     roof = Element(0.22, 0.92, [0.01, 0.01, 0.0127], [wood, insulation, gypsum], 0, 293,
                    True, 'wood_frame_roof')
-    mass = Element(0.2, 0.9, [0.05, 0.05], [wood, wood], 0, 293, True, 'wood_floor')
+    mass = Element(0.2, 0.9, [0.05, 0.05], [
+                   wood, wood], 0, 293, True, 'wood_floor')
 
     # building
     bldg = Building(
         floor_height=3.0, int_heat_night=1, int_heat_day=1, int_heat_frad=0.1,
         int_heat_flat=0.1, infil=0.171, vent=0.00045, glazing_ratio=0.4, u_value=3.0,
-        shgc=0.3, condtype='AIR', cop=3, cool_setpoint_day=297, cool_setpoint_night=297,
-        heat_setpoint_day=293, heat_setpoint_night=293, coolcap=41, heateff=0.8,
-        initial_temp=293)
+        shgc=0.3, condtype='AIR', cop=3, coolcap=41, heateff=0.8, initial_temp=293)
     bemdef = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, frac=0.5, bldtype=5,
                     builtera=2)
 
@@ -132,15 +130,14 @@ def custom_uwg(directory):
                    False, 'wood_frame_wall')
     roof = Element(0.22, 0.92, [0.01, 0.01, 0.0127], [wood, insulation, gypsum], 0, 293,
                    True, 'wood_frame_roof')
-    mass = Element(0.2, 0.9, [0.05, 0.05], [wood, wood], 0, 293, True, 'wood_floor')
+    mass = Element(0.2, 0.9, [0.05, 0.05], [
+                   wood, wood], 0, 293, True, 'wood_floor')
 
     # building
     bldg = Building(
         floor_height=3.0, int_heat_night=1, int_heat_day=1, int_heat_frad=0.1,
         int_heat_flat=0.1, infil=0.171, vent=0.00045, glazing_ratio=0.4, u_value=3.0,
-        shgc=0.3, condtype='AIR', cop=3, cool_setpoint_day=297, cool_setpoint_night=297,
-        heat_setpoint_day=293, heat_setpoint_night=293, coolcap=41, heateff=0.8,
-        initial_temp=293)
+        shgc=0.3, condtype='AIR', cop=3, coolcap=41, heateff=0.8, initial_temp=293)
 
     bemdef1 = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, frac=0.5, bldtype=5,
                      builtera=2)
