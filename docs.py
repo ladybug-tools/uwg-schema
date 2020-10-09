@@ -1,16 +1,14 @@
 """generate openapi docs."""
 from pkg_resources import get_distribution
-from uwg_schema._openapi import get_openapi, class_mapper
-from uwg_schema.model import Model
-from uwg_schema.simulation import SimulationParameter
+from uwg_schema._openapi import get_openapi
+from uwg_schema.model import UWG
 
 import json
 import argparse
 
 parser = argparse.ArgumentParser(description='Generate OpenAPI JSON schemas')
 
-parser.add_argument('--version',
-                    help='Set the version of the new OpenAPI Schema')
+parser.add_argument('--version', help='Set the version of the new OpenAPI Schema')
 
 args = parser.parse_args()
 
@@ -42,69 +40,20 @@ info = {
 
 
 # generate Model open api schema
-print('Generating Model documentation...')
+print('Generating UWG Model documentation...')
 
 external_docs = {
-    "description": "OpenAPI Specification with Inheritance",
-    "url": "./model_inheritance.json"
+    "description": "OpenAPI Specification",
+    "url": "./uwg.json"
 }
 
 openapi = get_openapi(
-    [Model],
+    [UWG],
     title='UWG Model Schema',
     description='This is the documentation for UWG model schema.',
     version=VERSION, info=info,
     external_docs=external_docs)
-# set the version default key in the Model schema
-openapi['components']['schemas']['Model']['properties']['version']['default'] = VERSION
-with open('./docs/model.json', 'w') as out_file:
+# set the version default key in the UWG schema
+openapi['components']['schemas']['UWG']['properties']['version']['default'] = VERSION
+with open('./docs/uwg.json', 'w') as out_file:
     json.dump(openapi, out_file, indent=2)
-
-# with inheritance
-openapi = get_openapi(
-    [Model],
-    title='UWG Model Schema',
-    description='This is the documentation for UWG model schema.',
-    version=VERSION, info=info,
-    inheritance=True,
-    external_docs=external_docs
-)
-# set the version default key in the Model schema
-openapi['components']['schemas']['Model']['allOf'][1]['properties']['version']['default'] = VERSION
-with open('./docs/model_inheritance.json', 'w') as out_file:
-    json.dump(openapi, out_file, indent=2)
-
-# add the mapper file
-with open('./docs/model_mapper.json', 'w') as out_file:
-    json.dump(class_mapper([Model]), out_file, indent=2)
-
-# generate SimulationParameter open api schema
-print('Generating Simulation Parameter documentation...')
-
-external_docs = {
-    "description": "OpenAPI Specification with Inheritance",
-    "url": "./simulation-parameter_inheritance.json"
-}
-
-openapi = get_openapi(
-    [SimulationParameter],
-    title='UWG Simulation Parameter Schema',
-    description='This is the documentation for UWG simulation parameter schema.',
-    version=VERSION, info=info,
-    external_docs=external_docs)
-with open('./docs/simulation-parameter.json', 'w') as out_file:
-    json.dump(openapi, out_file, indent=2)
-
-openapi = get_openapi(
-    [SimulationParameter],
-    title='UWG Simulation Parameter Schema',
-    description='This is the documentation for UWG simulation parameter schema.',
-    version=VERSION, inheritance=True, info=info,
-    external_docs=external_docs
-)
-with open('./docs/simulation-parameter_inheritance.json', 'w') as out_file:
-    json.dump(openapi, out_file, indent=2)
-
-# add the mapper file
-with open('./docs/simulation-parameter_mapper.json', 'w') as out_file:
-    json.dump(class_mapper([SimulationParameter]), out_file, indent=2)
