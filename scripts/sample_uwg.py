@@ -55,7 +55,8 @@ def schdef(directory):
     schdef = SchDef(elec=default_week, gas=default_week, light=default_week,
                     occ=default_week, cool=default_week, heat=default_week,
                     swh=default_week, q_elec=18.9, q_gas=3.2, q_light=18.9,
-                    n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=5, builtera=2)
+                    n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype='largeoffice',
+                    builtera='new')
 
     with open(dest_file, 'w') as fp:
         json.dump(schdef.to_dict(), fp, indent=4)
@@ -82,8 +83,8 @@ def bemdef(directory):
         floor_height=3.0, int_heat_night=1, int_heat_day=1, int_heat_frad=0.1,
         int_heat_flat=0.1, infil=0.171, vent=0.00045, glazing_ratio=0.4, u_value=3.0,
         shgc=0.3, condtype='AIR', cop=3, coolcap=41, heateff=0.8, initial_temp=293)
-    bemdef = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, frac=0.5, bldtype=5,
-                    builtera=2)
+    bemdef = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, bldtype='largeoffice',
+                    builtera='new')
 
     dest_file = os.path.join(directory, 'bemdef.json')
     with open(dest_file, 'w') as fp:
@@ -92,9 +93,8 @@ def bemdef(directory):
 
 def uwg(directory):
     """Generate UWg json."""
-    epw_path = './tests/epw/SGP_Singapore.486980_IWEC.epw'
     model = UWG.from_param_args(
-        epw_path=epw_path, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1)
+        epw_path=None, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone='1A')
 
     dest_file = os.path.join(directory, 'uwg.json')
     with open(dest_file, 'w') as fp:
@@ -111,12 +111,14 @@ def custom_uwg(directory):
     schdef1 = SchDef(elec=default_week, gas=default_week, light=default_week,
                      occ=default_week, cool=default_week, heat=default_week,
                      swh=default_week, q_elec=18.9, q_gas=3.2, q_light=18.9,
-                     n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=5, builtera=2)
+                     n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype='largeoffice',
+                     builtera='new')
     default_week = [[0.35] * 24] * 3
     schdef2 = SchDef(elec=default_week, gas=default_week, light=default_week,
                      occ=default_week, cool=default_week, heat=default_week,
                      swh=default_week,  q_elec=18.9, q_gas=3.2, q_light=18.9,
-                     n_occ=0.12, vent=0.0013, v_swh=0.2846, bldtype=16, builtera=2)
+                     n_occ=0.12, vent=0.0013, v_swh=0.2846,
+                     bldtype='customhospital', builtera='new')
 
     # BEMDedf
 
@@ -139,35 +141,20 @@ def custom_uwg(directory):
         int_heat_flat=0.1, infil=0.171, vent=0.00045, glazing_ratio=0.4, u_value=3.0,
         shgc=0.3, condtype='AIR', cop=3, coolcap=41, heateff=0.8, initial_temp=293)
 
-    bemdef1 = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, frac=0.5, bldtype=5,
-                     builtera=2)
-    bemdef2 = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof, frac=0.2,
-                     bldtype=16, builtera=2)
+    bemdef1 = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof,
+                     bldtype='largeoffice', builtera='new')
+    bemdef2 = BEMDef(building=bldg, mass=mass, wall=wall, roof=roof,
+                     bldtype='customhospital', builtera='new')
 
     # vectors
     ref_sch_vector = [schdef1, schdef2]
     ref_bem_vector = [bemdef1, bemdef2]
-    bld = [[0, 0, 0],  # FullServiceRestaurant
-           [0, 0, 0],  # Hospital
-           [0, 0, 0],  # LargeHotel
-           [0, 0, 0.4],  # LargeOffice
-           [0, 0, 0],  # MediumOffice
-           [0, 0, 0.5],  # MidRiseApartment
-           [0, 0, 0],  # OutPatient
-           [0, 0, 0],  # PrimarySchool
-           [0, 0, 0],  # QuickServiceRestaurant
-           [0, 0, 0],  # SecondarySchool
-           [0, 0, 0],  # SmallHotel
-           [0, 0, 0],  # SmallOffice
-           [0, 0, 0],  # Stand-aloneRetail
-           [0, 0, 0],  # StripMall
-           [0, 0, 0],  # SuperMarket
-           [0, 0, 0],  # Warehouse
-           [0, 0, 0.1]]  # Custom bldtype
+    bld = [('largeoffice', 'new', 0.4),  # overwrite
+           ('hospital', 'new', 0.5),
+           ('customhospital', 'new', 0.1)]  # extend
 
-    epw_path = './tests/epw/SGP_Singapore.486980_IWEC.epw'
     model = UWG.from_param_args(
-        epw_path=epw_path, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone=1,
+        epw_path=None, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone='1A',
         bld=bld, ref_bem_vector=ref_bem_vector, ref_sch_vector=ref_sch_vector)
 
     dest_file = os.path.join(directory, 'custom_uwg.json')
