@@ -5,7 +5,10 @@ from enum import Enum
 from ._base import NoExtraBaseModel
 
 WEEK_MATRIX = \
-    conlist(conlist(float, min_items=24, max_items=24), min_items=3, max_items=3)
+    conlist(conlist(float, min_items=24, max_items=24),
+            min_items=3, max_items=3)
+REF_BUILTERA = ('pre80', 'pst80', 'new')
+REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
 
 
 class Material(NoExtraBaseModel):
@@ -225,28 +228,31 @@ class BEMDef(NoExtraBaseModel):
     """Building Energy Model (BEM) definition."""
     type: constr(regex='^BEMDef$') = 'BEMDef'
 
-    bldtype: int = Field(
+    bldtype: str = Field(
         ...,
-        ge=0,
-        description='Number between 0 and 15 corresponding to the following '
-        'building types: FullServiceRestaurant (0), Hospital (1), LargeHotel (2), '
-        'LargeOffice (3), MediumOffice (4), MidRiseApartment (5), OutPatient (6), '
-        'PrimarySchool (7), QuickServiceRestaurant (8), SecondarySchool (9), '
-        'SmallHotel (10), SmallOffice (11), StandaloneRetail (12), StripMall (13), '
-        'SuperMarket (14), Warehouse (15). Additional building types can be defined '
-        'with a number greater then 15. This value is used to reference the fraction '
-        'of urban area the BEMDef object defines in the UWG bld matrix.'
+        description='Text referring to a building type. To reference (or overwrite) '
+        'a DOE reference building, text must be one of the following: '
+        '"fullservicerestaurant", "hospital", "largehotel", "largeoffice", '
+        '"mediumoffice", "midriseapartment", "outpatient", "primaryschool", '
+        '"quickservicerestaurant", "secondaryschool", "smallhotel", "smalloffice", '
+        '"standaloneretail", "stripmall", "supermarket", or "warehouse". This value '
+        'along with the builtera is used to reference the fraction of urban area the '
+        'building defines in the UWG bld matrix.'
     )
 
-    builtera: int = Field(
+    builtera: str = Field(
         ...,
-        ge=0,
-        le=2,
-        description='Number between 0 and 2 corresponding to the following '
-        'built eras: Pre-1980s (0), Post1980s (1), New construction (2). '
-        'This value is used to reference the fraction of urban area the BEMDef '
-        'object defines in the UWG bld matrix.'
+        description='Text defining building built era. Must be one of the following:'
+        '"pre80" (pre-1980s), "pst80" (post-1980s), or "new" (new constrution).'
+        'This value and the bldtype is used to reference the fraction of urban area'
+        'the building defines in the UWG bld matrix.'
     )
+
+    @validator('builtera')
+    def check_builtera(cls, value):
+        assert value in REF_BUILTERA_SET, \
+            'The builtera must be one of {}.Got: {}.'.format(
+                REF_BUILTERA, value.lower())
 
     building: Building = Field(
         ...,
@@ -268,46 +274,42 @@ class BEMDef(NoExtraBaseModel):
         description='Element object for building roof.'
     )
 
-    frac: float = Field(
-        0,
-        ge=0,
-        le=1,
-        description='Fraction of the urban floor space of this typology.'
-    )
-
 
 class SchDef(NoExtraBaseModel):
     """Schedule definition class."""
 
     type: constr(regex='^SchDef$') = 'SchDef'
 
-    bldtype: int = Field(
+    bldtype: str = Field(
         ...,
-        ge=0,
-        description='Number between 0 and 15 corresponding to the following '
-        'building types: FullServiceRestaurant (0), Hospital (1), LargeHotel (2), '
-        'LargeOffice (3), MediumOffice (4), MidRiseApartment (5), OutPatient (6), '
-        'PrimarySchool (7), QuickServiceRestaurant (8), SecondarySchool (9), '
-        'SmallHotel (10), SmallOffice (11), StandaloneRetail (12), StripMall (13), '
-        'SuperMarket (14), Warehouse (15). Additional building types can be defined '
-        'with a number greater then 15. This value is used to reference the fraction '
-        'of urban area the SchDef object defines in the UWG bld matrix.'
+        description='Text referring to a building type. To reference (or overwrite) '
+        'a DOE reference building, text must be one of the following: '
+        '"fullservicerestaurant", "hospital", "largehotel", "largeoffice", '
+        '"mediumoffice", "midriseapartment", "outpatient", "primaryschool", '
+        '"quickservicerestaurant", "secondaryschool", "smallhotel", "smalloffice", '
+        '"standaloneretail", "stripmall", "supermarket", or "warehouse". This value '
+        'along with the builtera is used to reference the fraction of urban area the '
+        'building defines in the UWG bld matrix.'
     )
 
-    builtera: int = Field(
+    builtera: str = Field(
         ...,
-        ge=0,
-        le=2,
-        description='Number between 0 and 2 corresponding to the following '
-        'built eras: Pre-1980s (0), Post1980s (1), New construction (2). '
-        'This value is used to reference the fraction of urban area the SchDef '
-        'object defines in the UWG bld matrix.'
+        description='Text defining building built era. Must be one of the following:'
+        '"pre80" (pre-1980s), "pst80" (post-1980s), or "new" (new constrution).'
+        'This value and the bldtype is used to reference the fraction of urban area'
+        'the building defines in the UWG bld matrix.'
     )
+
+    @validator('builtera')
+    def check_builtera(cls, value):
+        assert value in REF_BUILTERA_SET, \
+            'The builtera must be one of {}.Got: {}.'.format(
+                REF_BUILTERA, value.lower())
 
     elec: WEEK_MATRIX = Field(
-            ...,
-            description='Matrix of numbers for weekly electricity schedule.'
-            )
+        ...,
+        description='Matrix of numbers for weekly electricity schedule.'
+    )
 
     gas: WEEK_MATRIX = Field(
         default=[[0 for j in range(24)] for i in range(3)],

@@ -1,5 +1,5 @@
 from uwg_schema.model import UWG
-from uwg_schema.ref_bldg_template import Material, Element, Building, BEMDef, SchDef
+from uwg_schema.ref_bld_template import Material, Element, Building, BEMDef, SchDef
 import os
 
 # target folder where all of the samples live

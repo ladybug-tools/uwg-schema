@@ -113,7 +113,6 @@
         "horizontal": true,
         "name": "wood_frame_roof"
     },
-    "frac": 0.5,
-    "bldtype": 5,
-    "builtera": 2
+    "bldtype": "largeoffice",
+    "builtera": "new"
 }
