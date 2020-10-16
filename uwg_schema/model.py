@@ -235,37 +235,41 @@ class UWG(NoExtraBaseModel):
             Union[float, str], min_items=3, max_items=3),
         min_items=1) = Field(
         ...,
-        description='List of building types, eras, and fractions of urban building '
-        'stock. This consists of a list of tuples, each containing a string for the '
-        'building type, a string for the the built era, and a number between 0 and '
-        '1, inclusive, defining built stock fraction, i.e ("LargeOffice", "New", 0.4). '
-        'The fractions should sum to one. 768 predefined models are built referencing '
-        '16 building types for 3 built eras and 16 climate zones according to models '
-        'from the Department of Energy (DOE). Custom building types can also be '
-        'referenced in this property.'
+        description='List of building types, eras, and fraction of urban building '
+        'stock used during simulation. This consists of a nested array, with each inner '
+        'array containing a string for the building type, a string for the the built '
+        'era, and a number between 0 and 1, inclusive, defining built stock fraction, '
+        'i.e ("LargeOffice", "New", 0.4). The building type can refer to either one of '
+        'the 16 predefined building types contained in the UWG (specifying reference '
+        'models from the Department of Energy), or a custom building types. The built '
+        'eras must be one of: "pre80", "pst80", or "new", referring to pre-1980s, '
+        'post-1980s, or new construction. If referencing custome references, the '
+        'building type, and built era referenced here must exactly match the bldtype '
+        'and builtera property in the custom BEMDef and SchDef provided in the '
+        'ref_bem_vector and ref_sch_vector arrays. The fractions should sum to one.'
     )
 
-    @validator('bld')
+    @ validator('bld')
     def check_bld(cls, value):
-        """Ensure bld tuples have correct order of types."""
+        """Ensure bld arrays have correct order of types."""
         total_frac = 0.0
         for bld_row in value:
             bldtype, builtera, frac = bld_row[0], bld_row[1], bld_row[2]
-            assert isinstance(bldtype, str), 'The first item in the ' \
-                'bld tuple must be text defining the reference building ' \
-                'type. Got: {}.'.format(bldtype)
+            assert isinstance(bldtype, str), 'The first item in the '
+            'bld array must be text defining the reference building '
+            'type. Got: {}.'.format(bldtype)
             assert isinstance(builtera, str) and builtera.lower() in REF_BUILTERA_SET, \
-                'The second item in the bld tuple must be text defining the built ' \
-                'era as one of {}. Got: {}.'.format(
-                    REF_BUILTERA, builtera.lower())
-            assert 0.0 <= frac <= 1.0, 'The third item in the bld tuple ' \
-                'must be a value between 0 and 1, inclusive, defining the ' \
-                'fraction of total built stock. Got: {}.'.format(frac)
+                'The second item in the bld array must be text defining the built '
+            'era as one of {}. Got: {}.'.format(
+                REF_BUILTERA, builtera.lower())
+            assert 0.0 <= frac <= 1.0, 'The third item in the bld array '
+            'must be a value between 0 and 1, inclusive, defining the '
+            'fraction of total built stock. Got: {}.'.format(frac)
             total_frac += frac
 
-        assert total_frac == 1.0, 'The sum of reference building ' \
-            'fractions defined in bld must equal one. Got: {}.'.format(
-                total_frac)
+        assert abs(total_frac - 1.0) < 1e-10, 'The sum of reference building '
+        'fractions defined in bld must equal one. Got: {}.'.format(
+            total_frac)
 
         return value
 
@@ -287,9 +291,12 @@ class UWG(NoExtraBaseModel):
 
     zone: str = Field(
         ...,
-        description='Text representing an ASHRAE climate zone. Choose from the '
-        'following: "1A", "2A", "2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", '
-        '"4C", "5A", "5B", "6A", "6B", "7", "8".'
+        description='Text representing an ASHRAE climate zone. This value is used '
+        'to specify climate zone-specific construction, and HVAC parameters for the '
+        'DOE reference building types. This will not effect the simulation if only '
+        'custom reference buildings are used.  Choose from the following: "1A", "2A", '
+        '"2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "6A", "6B", '
+        '"7", "8".'
     )
 
     @validator('zone')

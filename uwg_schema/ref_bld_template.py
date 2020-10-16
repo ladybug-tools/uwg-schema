@@ -230,22 +230,25 @@ class BEMDef(NoExtraBaseModel):
 
     bldtype: str = Field(
         ...,
-        description='Text referring to a building type. To reference (or overwrite) '
-        'a DOE reference building, text must be one of the following: '
-        '"fullservicerestaurant", "hospital", "largehotel", "largeoffice", '
-        '"mediumoffice", "midriseapartment", "outpatient", "primaryschool", '
-        '"quickservicerestaurant", "secondaryschool", "smallhotel", "smalloffice", '
-        '"standaloneretail", "stripmall", "supermarket", or "warehouse". This value '
-        'along with the builtera is used to reference the fraction of urban area the '
-        'building defines in the UWG bld matrix.'
+        description='Text referring to a building type. This can be a unique identifier '
+        'for a custom reference building, or the identifier of the 16 predefined '
+        'DOE reference building included in the UWG. This value along with the builtera'
+        'must exactly match the corresponding identifiers in the bld array in order '
+        'to specify the fraction of total built stock the building occupies in the UWG '
+        'simulation. To reference (or overwrite) a DOE reference building, text must '
+        'be one of the following: "fullservicerestaurant", "hospital", "largehotel", '
+        '"largeoffice", "mediumoffice", "midriseapartment", "outpatient", '
+        '"primaryschool", "quickservicerestaurant", "secondaryschool", "smallhotel", '
+        '"smalloffice", "standaloneretail", "stripmall", "supermarket", or "warehouse".'
     )
 
     builtera: str = Field(
         ...,
         description='Text defining building built era. Must be one of the following:'
         '"pre80" (pre-1980s), "pst80" (post-1980s), or "new" (new constrution).'
-        'This value and the bldtype is used to reference the fraction of urban area'
-        'the building defines in the UWG bld matrix.'
+        'This value along with the bldtype must exactly match the identifiers in '
+        'the bld array in order to specify the fraction of total built stock the '
+        'building occupies in the UWG simulation.'
     )
 
     @validator('builtera')
@@ -282,22 +285,25 @@ class SchDef(NoExtraBaseModel):
 
     bldtype: str = Field(
         ...,
-        description='Text referring to a building type. To reference (or overwrite) '
-        'a DOE reference building, text must be one of the following: '
-        '"fullservicerestaurant", "hospital", "largehotel", "largeoffice", '
-        '"mediumoffice", "midriseapartment", "outpatient", "primaryschool", '
-        '"quickservicerestaurant", "secondaryschool", "smallhotel", "smalloffice", '
-        '"standaloneretail", "stripmall", "supermarket", or "warehouse". This value '
-        'along with the builtera is used to reference the fraction of urban area the '
-        'building defines in the UWG bld matrix.'
+        description='Text referring to a building type. This can be a unique identifier '
+        'for a custom reference building, or the identifier of the 16 predefined '
+        'DOE reference building included in the UWG. This value along with the builtera'
+        'must exactly match the corresponding identifiers in the bld array in order '
+        'to specify the fraction of total built stock the building occupies in the UWG '
+        'simulation. To reference (or overwrite) a DOE reference building, text must '
+        'be one of the following: "fullservicerestaurant", "hospital", "largehotel", '
+        '"largeoffice", "mediumoffice", "midriseapartment", "outpatient", '
+        '"primaryschool", "quickservicerestaurant", "secondaryschool", "smallhotel", '
+        '"smalloffice", "standaloneretail", "stripmall", "supermarket", or "warehouse".'
     )
 
     builtera: str = Field(
         ...,
         description='Text defining building built era. Must be one of the following:'
         '"pre80" (pre-1980s), "pst80" (post-1980s), or "new" (new constrution).'
-        'This value and the bldtype is used to reference the fraction of urban area'
-        'the building defines in the UWG bld matrix.'
+        'This value along with the bldtype must exactly match the identifiers in '
+        'the bld array in order to specify the fraction of total built stock the '
+        'building occupies in the UWG simulation.'
     )
 
     @validator('builtera')
