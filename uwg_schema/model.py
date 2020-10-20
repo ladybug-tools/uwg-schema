@@ -1,9 +1,16 @@
 """UWG Model schema."""
 from pydantic import Field, validator, constr, conlist
-from typing import List
+from typing import List, Union
 
 from ._base import NoExtraBaseModel
-from .ref_bldg_template import BEMDef, SchDef, WEEK_MATRIX
+from .ref_bld_template import BEMDef, SchDef, WEEK_MATRIX
+
+REF_ZONETYPE = ('1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
+                '5B', '6A', '6B', '7', '8')
+REF_ZONETYPE_SET = {'1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
+                    '5B', '6A', '6B', '7', '8'}
+REF_BUILTERA = ('pre80', 'pst80', 'new')
+REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
 
 
 class UWG(NoExtraBaseModel):
@@ -15,26 +22,6 @@ class UWG(NoExtraBaseModel):
         default='0.0.0',
         regex=r'([0-9]+)\.([0-9]+)\.([0-9]+)',
         description='Text string for the current version of the schema.'
-    )
-
-    epw_path: str = Field(
-        ...,
-        description='Text string for full path of the rural .epw file that will '
-        'be morphed.'
-    )
-
-    new_epw_dir: str = Field(
-        default=None,
-        description='Optional text string for the destination directory into '
-        'which the morphed .epw file is written. If None the morphed file will be '
-        'written into the same directory as the rural .epw file.'
-    )
-
-    new_epw_name: str = Field(
-        default=None,
-        description='Optional text string for the destination file name of the '
-        'morphed .epw file. If None the morphed file will append "_UWG" to the '
-        'original file name.'
     )
 
     month: int = Field(
@@ -236,25 +223,47 @@ class UWG(NoExtraBaseModel):
         'pedestrians, and street cooking.'
     )
 
-    bld: conlist(conlist(float, min_items=3, max_items=3), min_items=1) = Field(
+    bld: conlist(
+        conlist(
+            Union[float, str], min_items=3, max_items=3),
+        min_items=1) = Field(
         ...,
-        description='Matrix of numbers representing fraction of urban building stock. '
-        'This property consists of a 16 x 3 matrix referencing the fraction of the '
-        'urban building stock from 16 building types and 3 built eras representing, in '
-        'combination with 16 climate zones, 768 building archetypes generated from the '
-        'Commercial Building Energy Consumption Survey. Each column represent a '
-        'pre-1980s, post-1980s, or new construction era, and rows represent building '
-        'types. Custom build types can be added by adding new rows. The sum of the '
-        'fractional values in the bld matrix must sum to one.'
+        description='List of building types, eras, and fraction of urban building '
+        'stock used during simulation. This consists of a nested array, with each inner '
+        'array containing a string for the building type, a string for the the built '
+        'era, and a number between 0 and 1, inclusive, defining built stock fraction, '
+        'i.e ("LargeOffice", "New", 0.4). The building type can refer to either one of '
+        'the 16 predefined building types contained in the UWG (specifying reference '
+        'models from the Department of Energy), or a custom building types. The built '
+        'eras must be one of: "pre80", "pst80", or "new", referring to pre-1980s, '
+        'post-1980s, or new construction. If referencing custome references, the '
+        'building type, and built era referenced here must exactly match the bldtype '
+        'and builtera property in the custom BEMDef and SchDef provided in the '
+        'ref_bem_vector and ref_sch_vector arrays. The fractions should sum to one.'
     )
 
-    @validator('bld')
+    @ validator('bld')
     def check_bld(cls, value):
-        """Ensure bld matrix dimensions."""
-        for i in range(len(value)):
-            assert len(value[i]) == 3, 'The bld property must be a 16 (or greater) ' \
-                'x 3 matrix. Got {} columns for the row {}.'.format(
-                    len(value[i]), i)
+        """Ensure bld arrays have correct order of types."""
+        total_frac = 0.0
+        for bld_row in value:
+            bldtype, builtera, frac = bld_row[0], bld_row[1], bld_row[2]
+            assert isinstance(bldtype, str), 'The first item in the '
+            'bld array must be text defining the reference building '
+            'type. Got: {}.'.format(bldtype)
+            assert isinstance(builtera, str) and builtera.lower() in REF_BUILTERA_SET, \
+                'The second item in the bld array must be text defining the built '
+            'era as one of {}. Got: {}.'.format(
+                REF_BUILTERA, builtera.lower())
+            assert 0.0 <= frac <= 1.0, 'The third item in the bld array '
+            'must be a value between 0 and 1, inclusive, defining the '
+            'fraction of total built stock. Got: {}.'.format(frac)
+            total_frac += frac
+
+        assert abs(total_frac - 1.0) < 1e-10, 'The sum of reference building '
+        'fractions defined in bld must equal one. Got: {}.'.format(
+            total_frac)
+
         return value
 
     lattree: float = Field(
@@ -273,14 +282,21 @@ class UWG(NoExtraBaseModel):
         'urban grass.'
     )
 
-    zone: int = Field(
+    zone: str = Field(
         ...,
-        ge=1,
-        le=16,
-        description='Index representing an ASHRAE climate zone. Choose from the '
-        'following indices: 1 (1A), 2 (2A), 3 (2B), 4 (3A), 5 (3B-CA), 6 (3B), 7 (3C), '
-        '8 (4A), 9 (4B), 10 (4C), 11 (5A), 12 (5B), 13 (6A), 14 (6B), 15 (7), 16 (8).'
+        description='Text representing an ASHRAE climate zone. This value is used '
+        'to specify climate zone-specific construction, and HVAC parameters for the '
+        'DOE reference building types. This will not effect the simulation if only '
+        'custom reference buildings are used.  Choose from the following: "1A", "2A", '
+        '"2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "6A", "6B", '
+        '"7", "8".'
     )
+
+    @validator('zone')
+    def check_zone(cls, value):
+        assert value in REF_ZONETYPE_SET, \
+            'The zone must be one of {}.Got: {}.'.format(
+                REF_ZONETYPE, value.lower())
 
     vegstart: int = Field(
         ...,
