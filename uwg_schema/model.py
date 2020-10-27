@@ -5,12 +5,24 @@ from typing import List, Union
 from ._base import NoExtraBaseModel
 from .ref_bld_template import BEMDef, SchDef, WEEK_MATRIX
 
+# references
 REF_ZONETYPE = ('1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
                 '5B', '6A', '6B', '7', '8')
 REF_ZONETYPE_SET = {'1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
                     '5B', '6A', '6B', '7', '8'}
 REF_BUILTERA = ('pre80', 'pst80', 'new')
 REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
+
+# defaults
+DEFAULT_BLD = [('largeoffice', 'pst80', 0.4),
+               ('midriseapartment', 'pst80', 0.6)]
+DEFAULT_SCHTRAFFIC = [
+    [0.2, 0.2, 0.2, 0.2, 0.2, 0.4, 0.7, 0.9, 0.9, 0.6, 0.6, 0.6, 0.6, 0.6, 0.7, 0.8,
+        0.9, 0.9, 0.8, 0.8, 0.7, 0.3, 0.2, 0.2],  # Weekday
+    [0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.6, 0.7,
+        0.7, 0.7, 0.7, 0.5, 0.4, 0.3, 0.2, 0.2],  # Saturday
+    [0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4, 0.4,
+        0.4, 0.4, 0.4, 0.4, 0.3, 0.3, 0.2, 0.2]]  # Sunday
 
 
 class UWG(NoExtraBaseModel):
@@ -24,158 +36,10 @@ class UWG(NoExtraBaseModel):
         description='Text string for the current version of the schema.'
     )
 
-    month: int = Field(
-        ...,
-        ge=0,
-        le=12,
-        description='Number (1-12) representing simulation start month.'
-    )
-
-    day: int = Field(
-        ...,
-        ge=1,
-        le=31,
-        description='Number (1-31) representing simulation start day.'
-    )
-
-    nday: int = Field(
-        ...,
-        ge=0,
-        description='Number of days to simulate.'
-    )
-
-    dtsim: int = Field(
-        ...,
-        ge=0,
-        description='Simulation time step in seconds.'
-    )
-
-    dtweather: int = Field(
-        ...,
-        ge=0,
-        description='Number for weather data time-step in seconds.'
-    )
-
-    autosize: bool = Field(
-        ...,
-        description='Boolean to set HVAC autosize.'
-    )
-
-    sensocc: float = Field(
-        ...,
-        ge=0,
-        description='Sensible heat from occupant [W].'
-    )
-
-    latfocc: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Latent heat fraction from occupant.'
-    )
-
-    radfocc: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Radiant heat fraction from occupant.'
-    )
-
-    radfequip: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Radiant heat fraction from equipment.'
-    )
-
-    radflight: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Radiant heat fraction from electric light.'
-    )
-
-    h_ubl1: float = Field(
-        ...,
-        ge=0,
-        description='Daytime urban boundary layer height in meters.'
-    )
-
-    h_ubl2: float = Field(
-        ...,
-        ge=0,
-        description='Nighttime urban boundary layer height in meters.'
-    )
-
-    h_ref: float = Field(
-        ...,
-        ge=0,
-        description='Inversion height in meters.'
-    )
-
-    h_temp: float = Field(
-        ...,
-        ge=0,
-        description='Temperature measurement height in meters.'
-    )
-
-    h_wind: float = Field(
-        ...,
-        ge=0,
-        description='Wind height in meters.'
-    )
-
-    c_circ: float = Field(
-        ...,
-        ge=0,
-        description='Wind scaling coefficient.'
-    )
-
-    c_exch: float = Field(
-        ...,
-        ge=0,
-        description='Exchange velocity coefficient.'
-    )
-
-    maxday: float = Field(
-        ...,
-        ge=0,
-        description='Value for maximum heat flux threshold for daytime '
-        'conditions [W/m2].'
-    )
-
-    maxnight: float = Field(
-        ...,
-        ge=0,
-        description='Value for maximum heat flux threshold for nighttime '
-        'conditions [W/m2].'
-    )
-
-    windmin: float = Field(
-        ...,
-        ge=0,
-        description='Value for minimum wind speed in m/s.'
-    )
-
-    h_obs: float = Field(
-        ...,
-        ge=0,
-        description='Value for rural average obstacle height in meters.'
-    )
-
     bldheight: float = Field(
         ...,
         ge=0,
         description='Average urban building height in meters.'
-    )
-
-    h_mix: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Value between 0 and 1 for fraction of HVAC waste heat released to '
-        'street canyon. It is assumed the rest of building HVAC waste heat is released '
-        'from the roof.'
     )
 
     blddensity: float = Field(
@@ -194,40 +58,73 @@ class UWG(NoExtraBaseModel):
         'the urban facade area by total urban area.'
     )
 
-    charlength: float = Field(
-        ...,
-        ge=0,
-        description='Value for the urban characteristic length in meters. The '
-        'characteristic length is the dimension of a square that encompasses the '
-        'whole neighborhood'
-    )
-
-    albroad: float = Field(
+    grasscover: float = Field(
         ...,
         ge=0,
         le=1,
-        description='Value between 0 and 1 for urban road albedo.'
+        description='Number for fraction of urban ground covered in grass only.'
     )
 
-    droad: float = Field(
+    treecover: float = Field(
         ...,
         ge=0,
-        description='Value for thickness of urban road pavement thickness in meters.'
+        le=1,
+        description='Number for fraction of urban ground covered in trees.'
     )
 
-    sensanth: float = Field(
+    zone: str = Field(
         ...,
+        description='Text representing an ASHRAE climate zone. This value is used '
+        'to specify climate zone-specific construction, and HVAC parameters for the '
+        'DOE reference building types. This will not effect the simulation if only '
+        'custom reference buildings are used.  Choose from the following: "1A", "2A", '
+        '"2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "6A", "6B", '
+        '"7", "8".'
+    )
+
+    @validator('zone')
+    def check_zone(cls, value):
+        assert value in REF_ZONETYPE_SET, \
+            'The zone must be one of {}.Got: {}.'.format(
+                REF_ZONETYPE, value.lower())
+
+    month: int = Field(
+        1,
         ge=0,
-        description='Value for street level anthropogenic sensible heat [W/m2]. Street '
-        'level anthropogenic heat is non-building heat like heat emitted from cars, '
-        'pedestrians, and street cooking.'
+        le=12,
+        description='Number (1-12) representing simulation start month.'
+    )
+
+    day: int = Field(
+        1,
+        ge=1,
+        le=31,
+        description='Number (1-31) representing simulation start day.'
+    )
+
+    nday: int = Field(
+        31,
+        ge=0,
+        description='Number of days to simulate.'
+    )
+
+    dtsim: int = Field(
+        300,
+        ge=0,
+        description='Simulation time step in seconds.'
+    )
+
+    dtweather: int = Field(
+        3600,
+        ge=0,
+        description='Number for weather data time-step in seconds.'
     )
 
     bld: conlist(
         conlist(
             Union[float, str], min_items=3, max_items=3),
         min_items=1) = Field(
-        ...,
+        default=DEFAULT_BLD,
         description='List of building types, eras, and fraction of urban building '
         'stock used during simulation. This consists of a nested array, with each inner '
         'array containing a string for the building type, a string for the the built '
@@ -265,41 +162,97 @@ class UWG(NoExtraBaseModel):
             total_frac)
 
         return value
+    autosize: bool = Field(
+        False,
+        description='Boolean to set HVAC autosize.'
+    )
 
-    lattree: float = Field(
+    h_mix: float = Field(
         ...,
         ge=0,
         le=1,
-        description='Value between 0 and 1 for fraction latent heat absorbed by urban '
-        'trees.'
+        description='Value between 0 and 1 for fraction of HVAC waste heat released to '
+        'street canyon. It is assumed the rest of building HVAC waste heat is released '
+        'from the roof.'
     )
 
-    latgrss: float = Field(
-        ...,
+    sensocc: float = Field(
+        100,
+        ge=0,
+        description='Sensible heat from occupant [W].'
+    )
+
+    latfocc: float = Field(
+        0.3,
         ge=0,
         le=1,
-        description='Value between 0 and 1 for fraction of latent heat absorbed by '
-        'urban grass.'
+        description='Latent heat fraction from occupant.'
     )
 
-    zone: str = Field(
-        ...,
-        description='Text representing an ASHRAE climate zone. This value is used '
-        'to specify climate zone-specific construction, and HVAC parameters for the '
-        'DOE reference building types. This will not effect the simulation if only '
-        'custom reference buildings are used.  Choose from the following: "1A", "2A", '
-        '"2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "6A", "6B", '
-        '"7", "8".'
+    radfocc: float = Field(
+        0.2,
+        ge=0,
+        le=1,
+        description='Radiant heat fraction from occupant.'
     )
 
-    @validator('zone')
-    def check_zone(cls, value):
-        assert value in REF_ZONETYPE_SET, \
-            'The zone must be one of {}.Got: {}.'.format(
-                REF_ZONETYPE, value.lower())
+    radfequip: float = Field(
+        0.5,
+        ge=0,
+        le=1,
+        description='Radiant heat fraction from equipment.'
+    )
+
+    radflight: float = Field(
+        0.7,
+        ge=0,
+        le=1,
+        description='Radiant heat fraction from electric light.'
+    )
+
+    charlength: float = Field(
+        1000,
+        ge=0,
+        description='Value for the urban characteristic length in meters. The '
+        'characteristic length is the dimension of a square that encompasses the '
+        'whole neighborhood'
+    )
+
+    albroad: float = Field(
+        0.1,
+        ge=0,
+        le=1,
+        description='Value between 0 and 1 for urban road albedo.'
+    )
+
+    droad: float = Field(
+        0.5,
+        ge=0,
+        description='Value for thickness of urban road pavement thickness in meters.'
+    )
+
+    kroad: float = Field(
+        1,
+        ge=0,
+        le=1,
+        description='Number for road pavement conductivity [W/(mK)].'
+    )
+
+    croad: float = Field(
+        1600000,
+        ge=0,
+        description='Road pavement volumetric heat capacity [J/m^3K].'
+    )
+
+    rurvegcover: float = Field(
+        0.9,
+        ge=0,
+        le=1,
+        description='Number for fraction of rural ground covered by vegetation.'
+    )
 
     vegstart: int = Field(
-        ...,
+        4,
         ge=1,
         le=12,
         description='Value between 1 and 12 for the month in which vegetation starts to '
@@ -308,7 +261,7 @@ class UWG(NoExtraBaseModel):
     )
 
     vegend: int = Field(
-        ...,
+        10,
         ge=1,
         le=12,
         description='Value between 1 and 12 for the month in which vegetation stops '
@@ -316,49 +269,39 @@ class UWG(NoExtraBaseModel):
         'are assumed to fall.'
     )
 
-    grasscover: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Number for fraction of urban ground covered in grass only.'
-    )
-
-    treecover: float = Field(
-        ...,
-        ge=0,
-        le=1,
-        description='Number for fraction of urban ground covered in trees.'
-    )
-
     albveg: float = Field(
-        ...,
+        0.25,
         ge=0,
         le=1,
         description='Number for vegetation albedo.'
     )
 
-    rurvegcover: float = Field(
-        ...,
+    latgrss: float = Field(
+        0.4,
         ge=0,
         le=1,
-        description='Number for fraction of rural ground covered by vegetation.'
+        description='Value between 0 and 1 for fraction of latent heat absorbed by '
+        'urban grass.'
     )
 
-    kroad: float = Field(
-        ...,
+    lattree: float = Field(
+        0.6,
         ge=0,
         le=1,
-        description='Number for road pavement conductivity [W/(mK)].'
+        description='Value between 0 and 1 for fraction latent heat absorbed by urban '
+        'trees.'
     )
 
-    croad: float = Field(
-        ...,
+    sensanth: float = Field(
+        20,
         ge=0,
-        description='Road pavement volumetric heat capacity [J/m^3K].'
+        description='Value for street level anthropogenic sensible heat [W/m2]. Street '
+        'level anthropogenic heat is non-building heat like heat emitted from cars, '
+        'pedestrians, and street cooking.'
     )
 
     schtraffic: WEEK_MATRIX = Field(
-        ...,
+        default=DEFAULT_SCHTRAFFIC,
         description='Matrix for schedule of fractional anthropogenic heat load. This '
         'property consists of a 3 x 24 matrix. Each row corresponding to a schedule '
         'for a weekday, Saturday, and Sunday, and each column corresponds to an hour in '
@@ -372,6 +315,74 @@ class UWG(NoExtraBaseModel):
         assert all(isinstance(v, (float, int)) for v in _values), \
             'Every item in schtraffic must be a number.'
         return values
+
+    h_ubl1: float = Field(
+        1000,
+        ge=0,
+        description='Daytime urban boundary layer height in meters.'
+    )
+
+    h_ubl2: float = Field(
+        80,
+        ge=0,
+        description='Nighttime urban boundary layer height in meters.'
+    )
+
+    h_ref: float = Field(
+        150,
+        ge=0,
+        description='Inversion height in meters.'
+    )
+
+    h_temp: float = Field(
+        2,
+        ge=0,
+        description='Temperature measurement height in meters.'
+    )
+
+    h_wind: float = Field(
+        10,
+        ge=0,
+        description='Wind height in meters.'
+    )
+
+    c_circ: float = Field(
+        1.2,
+        ge=0,
+        description='Wind scaling coefficient.'
+    )
+
+    c_exch: float = Field(
+        1,
+        ge=0,
+        description='Exchange velocity coefficient.'
+    )
+
+    maxday: float = Field(
+        150,
+        ge=0,
+        description='Value for maximum heat flux threshold for daytime '
+        'conditions [W/m2].'
+    )
+
+    maxnight: float = Field(
+        20,
+        ge=0,
+        description='Value for maximum heat flux threshold for nighttime '
+        'conditions [W/m2].'
+    )
+
+    windmin: float = Field(
+        1,
+        ge=0,
+        description='Value for minimum wind speed in m/s.'
+    )
+
+    h_obs: float = Field(
+        0.1,
+        ge=0,
+        description='Value for rural average obstacle height in meters.'
+    )
 
     shgc: float = Field(
         default=None,

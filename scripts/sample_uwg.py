@@ -94,7 +94,8 @@ def bemdef(directory):
 def uwg(directory):
     """Generate UWg json."""
     model = UWG.from_param_args(
-        epw_path=None, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone='1A')
+        epw_path=None, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone='1A',
+        treecover=0.1, grasscover=0.1)
 
     dest_file = os.path.join(directory, 'uwg.json')
     with open(dest_file, 'w') as fp:
@@ -155,7 +156,8 @@ def custom_uwg(directory):
 
     model = UWG.from_param_args(
         epw_path=None, bldheight=10.0, blddensity=0.5, vertohor=0.5, zone='1A',
-        bld=bld, ref_bem_vector=ref_bem_vector, ref_sch_vector=ref_sch_vector)
+        treecover=0.1, grasscover=0.1, bld=bld, ref_bem_vector=ref_bem_vector,
+        ref_sch_vector=ref_sch_vector)
 
     dest_file = os.path.join(directory, 'custom_uwg.json')
     with open(dest_file, 'w') as fp:
