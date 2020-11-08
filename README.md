@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/ladybug-tools/uwg-schema.svg?branch=master)](https://travis-ci.org/ladybug-tools/uwg-schema)
+[![Build Status](https://travis-ci.com/ladybug-tools/uwg-schema.svg?branch=master)](https://travis-ci.com/ladybug-tools/uwg-schema)
 [![Coverage Status](https://coveralls.io/repos/github/ladybug-tools/uwg-schema/badge.svg?branch=master)](https://coveralls.io/github/ladybug-tools/uwg-schema)
 
 [![Python 3.7](https://img.shields.io/badge/python-3.7-blue.svg)](https://www.python.org/downloads/release/python-370/)
