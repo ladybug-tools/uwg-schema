@@ -6,10 +6,10 @@ from ._base import NoExtraBaseModel
 from .ref_bld_template import BEMDef, SchDef, WEEK_MATRIX
 
 # references
-REF_ZONETYPE = ('1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
-                '5B', '6A', '6B', '7', '8')
-REF_ZONETYPE_SET = {'1A', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C', '5A',
-                    '5B', '6A', '6B', '7', '8'}
+REF_ZONETYPE = ('1A', '1B', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C',
+                '5A', '5B', '5C', '6A', '6B', '7', '8')
+REF_ZONETYPE_SET = {'1A', '1B', '2A', '2B', '3A', '3B-CA', '3B', '3C', '4A', '4B', '4C',
+                    '5A', '5B', '5C', '6A', '6B', '7', '8'}
 REF_BUILTERA = ('pre80', 'pst80', 'new')
 REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
 
@@ -77,9 +77,9 @@ class UWG(NoExtraBaseModel):
         description='Text representing an ASHRAE climate zone. This value is used '
         'to specify climate zone-specific construction, and HVAC parameters for the '
         'DOE reference building types. This will not effect the simulation if only '
-        'custom reference buildings are used.  Choose from the following: "1A", "2A", '
-        '"2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "6A", "6B", '
-        '"7", "8".'
+        'custom reference buildings are used.  Choose from the following: "1A", "1B", '
+        '"2A", "2B", "3A", "3B-CA", "3B", "3C", "4A", "4B", "4C", "5A", "5B", "5C", '
+        '"6A", "6B", "7", "8".'
     )
 
     @validator('zone')
