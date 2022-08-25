@@ -1,0 +1,1339 @@
+{
+  "openapi": "3.0.2",
+  "servers": [],
+  "info": {
+    "description": "This is the documentation for UWG model schema.",
+    "version": "0.2.11",
+    "title": "UWG Model Schema",
+    "contact": {
+      "name": "Ladybug Tools",
+      "email": "info@ladybug.tools",
+      "url": "https://github.com/ladybug-tools/uwg-schema"
+    },
+    "x-logo": {
+      "url": "https://github.com/ladybug-tools/artwork/raw/master/icons_components/dragonfly/png/uwg.png",
+      "altText": "UWG logo"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/ladybug-tools/uwg-schema/blob/master/LICENSE"
+    }
+  },
+  "externalDocs": {
+    "description": "OpenAPI Specification",
+    "url": "./uwg.json"
+  },
+  "tags": [
+    {
+      "name": "bemdef_model",
+      "x-displayName": "BEMDef",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/BEMDef\" />\n"
+    },
+    {
+      "name": "building_model",
+      "x-displayName": "Building",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Building\" />\n"
+    },
+    {
+      "name": "condtype_model",
+      "x-displayName": "CondType",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/CondType\" />\n"
+    },
+    {
+      "name": "element_model",
+      "x-displayName": "Element",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Element\" />\n"
+    },
+    {
+      "name": "material_model",
+      "x-displayName": "Material",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/Material\" />\n"
+    },
+    {
+      "name": "schdef_model",
+      "x-displayName": "SchDef",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/SchDef\" />\n"
+    },
+    {
+      "name": "uwg_model",
+      "x-displayName": "UWG",
+      "description": "<SchemaDefinition schemaRef=\"#/components/schemas/UWG\" />\n"
+    }
+  ],
+  "x-tagGroups": [
+    {
+      "name": "Models",
+      "tags": [
+        "bemdef_model",
+        "building_model",
+        "condtype_model",
+        "element_model",
+        "material_model",
+        "schdef_model",
+        "uwg_model"
+      ]
+    }
+  ],
+  "paths": {},
+  "components": {
+    "schemas": {
+      "SchDef": {
+        "title": "SchDef",
+        "description": "Schedule definition class.",
+        "type": "object",
+        "properties": {
+          "bldtype": {
+            "title": "Bldtype",
+            "description": "Text referring to a building type. This can be a unique identifier for a custom reference building, or the identifier of the 16 predefined DOE reference building included in the UWG. This value along with the builteramust exactly match the corresponding identifiers in the bld array in order to specify the fraction of total built stock the building occupies in the UWG simulation. To reference (or overwrite) a DOE reference building, text must be one of the following: \"fullservicerestaurant\", \"hospital\", \"largehotel\", \"largeoffice\", \"mediumoffice\", \"midriseapartment\", \"outpatient\", \"primaryschool\", \"quickservicerestaurant\", \"secondaryschool\", \"smallhotel\", \"smalloffice\", \"standaloneretail\", \"stripmall\", \"supermarket\", or \"warehouse\".",
+            "type": "string"
+          },
+          "builtera": {
+            "title": "Builtera",
+            "description": "Text defining building built era. Must be one of the following:\"pre80\" (pre-1980s), \"pst80\" (post-1980s), or \"new\" (new constrution).This value along with the bldtype must exactly match the identifiers in the bld array in order to specify the fraction of total built stock the building occupies in the UWG simulation.",
+            "type": "string"
+          },
+          "elec": {
+            "title": "Elec",
+            "description": "Matrix of numbers for weekly electricity schedule.",
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "light": {
+            "title": "Light",
+            "description": "Matrix of numbers for weekly light schedule.",
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "occ": {
+            "title": "Occ",
+            "description": "Matrix of numbers for weekly occupancy schedule.",
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "cool": {
+            "title": "Cool",
+            "description": "Matrix of numbers for weekly cooling temperature schedule.",
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "heat": {
+            "title": "Heat",
+            "description": "Matrix of numbers for weekly heating temperature schedule.",
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "q_elec": {
+            "title": "Q Elec",
+            "description": "Numerical value for maximum electrical plug process load [W/m2].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "q_light": {
+            "title": "Q Light",
+            "description": "Numerical value for maximum light process load per unit area [W/m2].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "n_occ": {
+            "title": "N Occ",
+            "description": "Numerical value for maximum number of occupants per unit area [person/m2].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "vent": {
+            "title": "Vent",
+            "description": "Numerical value for maximum ventilation rate per unit area [m3/s/m2].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "title": "Type",
+            "default": "SchDef",
+            "pattern": "^SchDef$",
+            "type": "string",
+            "readOnly": true
+          },
+          "gas": {
+            "title": "Gas",
+            "description": "Matrix of numbers for weekly gas schedule.",
+            "default": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "swh": {
+            "title": "Swh",
+            "description": "Matrix of numbers for weekly hot water schedule.",
+            "default": [
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ],
+              [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+              ]
+            ],
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "q_gas": {
+            "title": "Q Gas",
+            "description": "Numerical value for maximum gas process load per unit area [W/m2].",
+            "default": 0,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "v_swh": {
+            "title": "V Swh",
+            "description": "Numerical value for maximum hot water rate per unit area [L/hr/m2].",
+            "default": 0,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "bldtype",
+          "builtera",
+          "elec",
+          "light",
+          "occ",
+          "cool",
+          "heat",
+          "q_elec",
+          "q_light",
+          "n_occ",
+          "vent"
+        ],
+        "additionalProperties": false
+      },
+      "CondType": {
+        "title": "CondType",
+        "description": "Cooling condensation system type.",
+        "enum": [
+          "AIR",
+          "WATER"
+        ],
+        "type": "string"
+      },
+      "Building": {
+        "title": "Building",
+        "description": "Building object specifies building characteristics.",
+        "type": "object",
+        "properties": {
+          "floor_height": {
+            "title": "Floor Height",
+            "description": "Floor height in meters.",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "infil": {
+            "title": "Infil",
+            "description": "Infiltration rate (ACH).",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "vent": {
+            "title": "Vent",
+            "description": "Ventilation rate (ACH).",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "glazing_ratio": {
+            "title": "Glazing Ratio",
+            "description": "Value between 0 and 1 for glazing ratio.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "u_value": {
+            "title": "U Value",
+            "description": "Window U-value including film coefficent [W/(m2-K)].",
+            "exclusiveMinimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "shgc": {
+            "title": "Shgc",
+            "description": "Value between 0 and 1 for window Solar Heat Gain Coefficient (SHGC).",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "cop": {
+            "title": "Cop",
+            "description": "COP of cooling system (nominal).",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "coolcap": {
+            "title": "Coolcap",
+            "description": "Rated cooling system capacity [W/m2].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "heateff": {
+            "title": "Heateff",
+            "description": "Heating system capacity.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "title": "Type",
+            "default": "Building",
+            "pattern": "^Building$",
+            "type": "string",
+            "readOnly": true
+          },
+          "int_heat_night": {
+            "title": "Int Heat Night",
+            "description": "Nighttime internal sensible heat gain [W/m2].",
+            "default": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "int_heat_day": {
+            "title": "Int Heat Day",
+            "description": "Daytime internal sensible heat gain [W/m2].",
+            "default": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "int_heat_frad": {
+            "title": "Int Heat Frad",
+            "description": "Value between 0 and 1 for radiant fraction of internal gains.",
+            "default": 0.1,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "int_heat_flat": {
+            "title": "Int Heat Flat",
+            "description": "Value between 0 and 1 for latent fraction of internal gains.",
+            "default": 0.1,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "condtype": {
+            "description": "Text string for cooling condensation system type. Choose from: AIR or WATER.",
+            "default": "AIR",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CondType"
+              }
+            ]
+          },
+          "initial_temp": {
+            "title": "Initial Temp",
+            "description": "Initial indoor air temperature [K].",
+            "default": 291,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "floor_height",
+          "infil",
+          "vent",
+          "glazing_ratio",
+          "u_value",
+          "shgc",
+          "cop",
+          "coolcap",
+          "heateff"
+        ],
+        "additionalProperties": false
+      },
+      "Material": {
+        "title": "Material",
+        "description": "Material class.",
+        "type": "object",
+        "properties": {
+          "thermalcond": {
+            "title": "Thermalcond",
+            "description": "Number for thermal conductivity [W/(m-K)].",
+            "exclusiveMinimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "volheat": {
+            "title": "Volheat",
+            "description": "Number for volumetric capacity [J/(m3-K)].",
+            "exclusiveMinimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "name": {
+            "title": "Name",
+            "name": "Text string for name of the Material.",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "default": "Material",
+            "pattern": "^Material$",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "thermalcond",
+          "volheat",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "Element": {
+        "title": "Element",
+        "description": "Element object defines constructions.",
+        "type": "object",
+        "properties": {
+          "albedo": {
+            "title": "Albedo",
+            "description": "A value between 0 and 1 for outer surface albedo.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "emissivity": {
+            "title": "Emissivity",
+            "description": "A value between 0 and 1 for outer surface emissivity.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "layer_thickness_lst": {
+            "title": "Layer Thickness Lst",
+            "description": "List of thickness in meters of each Material in the Element. The order of thickness should correspond to the order of the Material objects in material_lst.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          "material_lst": {
+            "title": "Material Lst",
+            "description": "List of Material objects in the element. The order of Material objects should correspond to the order of the thickness in layer_thickness_lst.",
+            "min_itmes": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Material"
+            }
+          },
+          "vegcoverage": {
+            "title": "Vegcoverage",
+            "description": "Value between 0 and 1 for fraction of vegetation coverage on Element.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "t_init": {
+            "title": "T Init",
+            "description": "Initial temperature of Element [K].",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "horizontal": {
+            "title": "Horizontal",
+            "description": "Boolean value indicating if Element is horizontal or not.",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "name": "Text string for name of the Element.",
+            "type": "string"
+          },
+          "type": {
+            "title": "Type",
+            "default": "Element",
+            "pattern": "^Element$",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "albedo",
+          "emissivity",
+          "layer_thickness_lst",
+          "material_lst",
+          "vegcoverage",
+          "t_init",
+          "horizontal",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "BEMDef": {
+        "title": "BEMDef",
+        "description": "Building Energy Model (BEM) definition.",
+        "type": "object",
+        "properties": {
+          "bldtype": {
+            "title": "Bldtype",
+            "description": "Text referring to a building type. This can be a unique identifier for a custom reference building, or the identifier of the 16 predefined DOE reference building included in the UWG. This value along with the builteramust exactly match the corresponding identifiers in the bld array in order to specify the fraction of total built stock the building occupies in the UWG simulation. To reference (or overwrite) a DOE reference building, text must be one of the following: \"fullservicerestaurant\", \"hospital\", \"largehotel\", \"largeoffice\", \"mediumoffice\", \"midriseapartment\", \"outpatient\", \"primaryschool\", \"quickservicerestaurant\", \"secondaryschool\", \"smallhotel\", \"smalloffice\", \"standaloneretail\", \"stripmall\", \"supermarket\", or \"warehouse\".",
+            "type": "string"
+          },
+          "builtera": {
+            "title": "Builtera",
+            "description": "Text defining building built era. Must be one of the following:\"pre80\" (pre-1980s), \"pst80\" (post-1980s), or \"new\" (new constrution).This value along with the bldtype must exactly match the identifiers in the bld array in order to specify the fraction of total built stock the building occupies in the UWG simulation.",
+            "type": "string"
+          },
+          "building": {
+            "title": "Building",
+            "description": "Building object.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Building"
+              }
+            ]
+          },
+          "mass": {
+            "title": "Mass",
+            "description": "Element object for building internal mass.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Element"
+              }
+            ]
+          },
+          "wall": {
+            "title": "Wall",
+            "description": "Element object for building wall.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Element"
+              }
+            ]
+          },
+          "roof": {
+            "title": "Roof",
+            "description": "Element object for building roof.",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Element"
+              }
+            ]
+          },
+          "type": {
+            "title": "Type",
+            "default": "BEMDef",
+            "pattern": "^BEMDef$",
+            "type": "string",
+            "readOnly": true
+          }
+        },
+        "required": [
+          "bldtype",
+          "builtera",
+          "building",
+          "mass",
+          "wall",
+          "roof"
+        ],
+        "additionalProperties": false
+      },
+      "UWG": {
+        "title": "UWG",
+        "description": "Urban Weather Generator (UWG) class.",
+        "type": "object",
+        "properties": {
+          "bldheight": {
+            "title": "Bldheight",
+            "description": "Average urban building height in meters.",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "blddensity": {
+            "title": "Blddensity",
+            "description": "Value between 0 and 1 for building footprint density as fraction of urban area.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "vertohor": {
+            "title": "Vertohor",
+            "description": "Value for vertical-to-horizontal urban area ratio. The vertical-to-horizontal urban area ratio is calculated by dividing the urban facade area by total urban area.",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "grasscover": {
+            "title": "Grasscover",
+            "description": "Number for fraction of urban ground covered in grass only.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "treecover": {
+            "title": "Treecover",
+            "description": "Number for fraction of urban ground covered in trees.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "zone": {
+            "title": "Zone",
+            "description": "Text representing an ASHRAE climate zone. This value is used to specify climate zone-specific construction, and HVAC parameters for the DOE reference building types. This will not effect the simulation if only custom reference buildings are used.  Choose from the following: \"1A\", \"1B\", \"2A\", \"2B\", \"3A\", \"3B-CA\", \"3B\", \"3C\", \"4A\", \"4B\", \"4C\", \"5A\", \"5B\", \"5C\", \"6A\", \"6B\", \"7\", \"8\".",
+            "type": "string"
+          },
+          "h_mix": {
+            "title": "H Mix",
+            "description": "Value between 0 and 1 for fraction of HVAC waste heat released to street canyon. It is assumed the rest of building HVAC waste heat is released from the roof.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "title": "Type",
+            "default": "UWG",
+            "pattern": "^UWG$",
+            "type": "string",
+            "readOnly": true
+          },
+          "version": {
+            "title": "Version",
+            "description": "Text string for the current version of the schema.",
+            "default": "0.2.11",
+            "pattern": "([0-9]+)\\.([0-9]+)\\.([0-9]+)",
+            "type": "string"
+          },
+          "month": {
+            "title": "Month",
+            "description": "Number (1-12) representing simulation start month.",
+            "default": 1,
+            "minimum": 0,
+            "maximum": 12,
+            "type": "integer",
+            "format": "int32"
+          },
+          "day": {
+            "title": "Day",
+            "description": "Number (1-31) representing simulation start day.",
+            "default": 1,
+            "minimum": 1,
+            "maximum": 31,
+            "type": "integer",
+            "format": "int32"
+          },
+          "nday": {
+            "title": "Nday",
+            "description": "Number of days to simulate.",
+            "default": 31,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "dtsim": {
+            "title": "Dtsim",
+            "description": "Simulation time step in seconds.",
+            "default": 300,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "dtweather": {
+            "title": "Dtweather",
+            "description": "Number for weather data time-step in seconds.",
+            "default": 3600,
+            "minimum": 0,
+            "type": "integer",
+            "format": "int32"
+          },
+          "bld": {
+            "title": "Bld",
+            "description": "List of building types, eras, and fraction of urban building stock used during simulation. This consists of a nested array, with each inner array containing a string for the building type, a string for the the built era, and a number between 0 and 1, inclusive, defining built stock fraction, i.e (\"LargeOffice\", \"New\", 0.4). The building type can refer to either one of the 16 predefined building types contained in the UWG (specifying reference models from the Department of Energy), or a custom building types. The built eras must be one of: \"pre80\", \"pst80\", or \"new\", referring to pre-1980s, post-1980s, or new construction. If referencing custome references, the building type, and built era referenced here must exactly match the bldtype and builtera property in the custom BEMDef and SchDef provided in the ref_bem_vector and ref_sch_vector arrays. The fractions should sum to one.",
+            "default": [
+              [
+                "largeoffice",
+                "pst80",
+                0.4
+              ],
+              [
+                "midriseapartment",
+                "pst80",
+                0.6
+              ]
+            ],
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ]
+              },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          },
+          "autosize": {
+            "title": "Autosize",
+            "description": "Boolean to set HVAC autosize.",
+            "default": false,
+            "type": "boolean"
+          },
+          "sensocc": {
+            "title": "Sensocc",
+            "description": "Sensible heat from occupant [W].",
+            "default": 100,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "latfocc": {
+            "title": "Latfocc",
+            "description": "Latent heat fraction from occupant.",
+            "default": 0.3,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "radfocc": {
+            "title": "Radfocc",
+            "description": "Radiant heat fraction from occupant.",
+            "default": 0.2,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "radfequip": {
+            "title": "Radfequip",
+            "description": "Radiant heat fraction from equipment.",
+            "default": 0.5,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "radflight": {
+            "title": "Radflight",
+            "description": "Radiant heat fraction from electric light.",
+            "default": 0.7,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "charlength": {
+            "title": "Charlength",
+            "description": "Value for the urban characteristic length in meters. The characteristic length is the dimension of a square that encompasses the whole neighborhood",
+            "default": 1000,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "albroad": {
+            "title": "Albroad",
+            "description": "Value between 0 and 1 for urban road albedo.",
+            "default": 0.1,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "droad": {
+            "title": "Droad",
+            "description": "Value for thickness of urban road pavement thickness in meters.",
+            "default": 0.5,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "kroad": {
+            "title": "Kroad",
+            "description": "Number for road pavement conductivity [W/(mK)].",
+            "default": 1,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "croad": {
+            "title": "Croad",
+            "description": "Road pavement volumetric heat capacity [J/m^3K].",
+            "default": 1600000,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "rurvegcover": {
+            "title": "Rurvegcover",
+            "description": "Number for fraction of rural ground covered by vegetation.",
+            "default": 0.9,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "vegstart": {
+            "title": "Vegstart",
+            "description": "Value between 1 and 12 for the month in which vegetation starts to evapotranspire. This month corresponds to when the leaves of vegetation are assumed to be out.",
+            "default": 4,
+            "minimum": 1,
+            "maximum": 12,
+            "type": "integer",
+            "format": "int32"
+          },
+          "vegend": {
+            "title": "Vegend",
+            "description": "Value between 1 and 12 for the month in which vegetation stops evapotranspiration. This month corresponds to when the leaves of vegetation are assumed to fall.",
+            "default": 10,
+            "minimum": 1,
+            "maximum": 12,
+            "type": "integer",
+            "format": "int32"
+          },
+          "albveg": {
+            "title": "Albveg",
+            "description": "Number for vegetation albedo.",
+            "default": 0.25,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "latgrss": {
+            "title": "Latgrss",
+            "description": "Value between 0 and 1 for fraction of latent heat absorbed by urban grass.",
+            "default": 0.4,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "lattree": {
+            "title": "Lattree",
+            "description": "Value between 0 and 1 for fraction latent heat absorbed by urban trees.",
+            "default": 0.6,
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "sensanth": {
+            "title": "Sensanth",
+            "description": "Value for street level anthropogenic sensible heat [W/m2]. Street level anthropogenic heat is non-building heat like heat emitted from cars, pedestrians, and street cooking.",
+            "default": 20,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "schtraffic": {
+            "title": "Schtraffic",
+            "description": "Matrix for schedule of fractional anthropogenic heat load. This property consists of a 3 x 24 matrix. Each row corresponding to a schedule for a weekday, Saturday, and Sunday, and each column corresponds to an hour in the day.",
+            "default": [
+              [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.4,
+                0.7,
+                0.9,
+                0.9,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.6,
+                0.7,
+                0.8,
+                0.9,
+                0.9,
+                0.8,
+                0.8,
+                0.7,
+                0.3,
+                0.2,
+                0.2
+              ],
+              [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.3,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.5,
+                0.6,
+                0.7,
+                0.7,
+                0.7,
+                0.7,
+                0.5,
+                0.4,
+                0.3,
+                0.2,
+                0.2
+              ],
+              [
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.2,
+                0.3,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.4,
+                0.3,
+                0.3,
+                0.2,
+                0.2
+              ]
+            ],
+            "minItems": 3,
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "number",
+                "format": "double"
+              },
+              "minItems": 24,
+              "maxItems": 24
+            }
+          },
+          "h_ubl1": {
+            "title": "H Ubl1",
+            "description": "Daytime urban boundary layer height in meters.",
+            "default": 1000,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "h_ubl2": {
+            "title": "H Ubl2",
+            "description": "Nighttime urban boundary layer height in meters.",
+            "default": 80,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "h_ref": {
+            "title": "H Ref",
+            "description": "Inversion height in meters.",
+            "default": 150,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "h_temp": {
+            "title": "H Temp",
+            "description": "Temperature measurement height in meters.",
+            "default": 2,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "h_wind": {
+            "title": "H Wind",
+            "description": "Wind height in meters.",
+            "default": 10,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "c_circ": {
+            "title": "C Circ",
+            "description": "Wind scaling coefficient.",
+            "default": 1.2,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "c_exch": {
+            "title": "C Exch",
+            "description": "Exchange velocity coefficient.",
+            "default": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "maxday": {
+            "title": "Maxday",
+            "description": "Value for maximum heat flux threshold for daytime conditions [W/m2].",
+            "default": 150,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "maxnight": {
+            "title": "Maxnight",
+            "description": "Value for maximum heat flux threshold for nighttime conditions [W/m2].",
+            "default": 20,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "windmin": {
+            "title": "Windmin",
+            "description": "Value for minimum wind speed in m/s.",
+            "default": 1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "h_obs": {
+            "title": "H Obs",
+            "description": "Value for rural average obstacle height in meters.",
+            "default": 0.1,
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "shgc": {
+            "title": "Shgc",
+            "description": "Value between 0 and 1 for average building glazing Solar Heat Gain Coefficient (SHGC). If value is None, a unique shgc is set for each building from the refBEM.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "albroof": {
+            "title": "Albroof",
+            "description": "Value between 0 and 1 for average building roof albedo. If value is None, a unique albroof is set for each building from the refBEM.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "glzr": {
+            "title": "Glzr",
+            "description": "Value between 0 and 1 for average building glazing ratio. If value is None, a unique glzr is set for each building from the refBEM.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "vegroof": {
+            "title": "Vegroof",
+            "description": "Fraction of roofs covered in grass/shrubs. If value is None, a unique vegroof is set for each building from the refBEM.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "albwall": {
+            "title": "Albwall",
+            "description": "Value between 0 and 1 for average building albedo. If value is None, a unique albwall is set for each building from the refBEM.",
+            "minimum": 0,
+            "maximum": 1,
+            "type": "number",
+            "format": "double"
+          },
+          "flr_h": {
+            "title": "Flr H",
+            "description": "Average building floor height in meters. If value is None, a unique flr_h is set for each building from the refBEM.",
+            "minimum": 0,
+            "type": "number",
+            "format": "double"
+          },
+          "ref_sch_vector": {
+            "title": "Ref Sch Vector",
+            "description": "Optional list of custom SchDef objects to override or add to the refSchedule matrix according to the SchDef bldtype and builtera values.If value is None, all BEMDef objects are referenced from the DOE typologies defined by default in the refBEM matrix.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchDef"
+            }
+          },
+          "ref_bem_vector": {
+            "title": "Ref Bem Vector",
+            "description": "Optional list of custom BEMDef objects to override or add to the refBEM matrix according to the BEMDef bldtype and builtera values. If value is None, all SchDef objects are referenced from the DOE typologies defined by default in the refSch matrix.",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BEMDef"
+            }
+          }
+        },
+        "required": [
+          "bldheight",
+          "blddensity",
+          "vertohor",
+          "grasscover",
+          "treecover",
+          "zone",
+          "h_mix"
+        ],
+        "additionalProperties": false
+      }
+    }
+  }
+}
