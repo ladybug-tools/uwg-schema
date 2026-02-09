@@ -1,12 +1,12 @@
-from pydantic import Field, validator, root_validator, constr, conlist
+from pydantic import Field, field_validator, model_validator, conlist
 from typing import List
 from enum import Enum
 
 from ._base import NoExtraBaseModel
 
 WEEK_MATRIX = \
-    conlist(conlist(float, min_items=24, max_items=24),
-            min_items=3, max_items=3)
+    conlist(conlist(float, min_length=24, max_length=24),
+            min_length=3, max_length=3)
 REF_BUILTERA = ('pre80', 'pst80', 'new')
 REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
 
@@ -14,7 +14,7 @@ REF_BUILTERA_SET = {'pre80', 'pst80', 'new'}
 class Material(NoExtraBaseModel):
     """Material class."""
 
-    type: constr(regex='^Material$') = 'Material'
+    type: str = Field('Material', pattern='^Material$')
 
     thermalcond: float = Field(
         ...,
@@ -30,14 +30,14 @@ class Material(NoExtraBaseModel):
 
     name: str = Field(
         ...,
-        name='Text string for name of the Material.'
+        description='Text string for name of the Material.'
     )
 
 
 class Element(NoExtraBaseModel):
     """Element object defines constructions."""
 
-    type: constr(regex='^Element$') = 'Element'
+    type: str = Field('Element', pattern='^Element$')
 
     albedo: float = Field(
         ...,
@@ -55,7 +55,7 @@ class Element(NoExtraBaseModel):
 
     layer_thickness_lst: List[float] = Field(
         ...,
-        min_items=1,
+        min_length=1,
         description='List of thickness in meters of each Material in the Element. '
         'The order of thickness should correspond to the order of the Material '
         'objects in material_lst.'
@@ -63,7 +63,7 @@ class Element(NoExtraBaseModel):
 
     material_lst: List[Material] = Field(
         ...,
-        min_itmes=1,
+        min_length=1,
         description='List of Material objects in the element. The order of Material '
         'objects should correspond to the order of the thickness in layer_thickness_lst.'
     )
@@ -89,27 +89,25 @@ class Element(NoExtraBaseModel):
 
     name: str = Field(
         ...,
-        name='Text string for name of the Element.'
+        description='Text string for name of the Element.'
     )
 
-    @root_validator
-    def check_length(cls, values):
+    @model_validator(mode='after')
+    def check_length(self):
         """Ensure material and thickness list lengths."""
-        thickness_lst = values.get('layer_thickness_lst')
-        material_lst = values.get('material_lst')
-        assert len(thickness_lst) == len(material_lst), 'The material_lst must ' \
+        assert len(self.layer_thickness_lst) == len(self.material_lst), 'The material_lst must ' \
             'have the same length as the layer_thickness_lst. Got lengths {} and {}, ' \
             'respectively.'
-        return values
+        return self
 
-    @validator('layer_thickness_lst')
+    @field_validator('layer_thickness_lst')
     def check_layer_thickness_lst(cls, values):
         """Ensure every list value is greater than 0."""
         assert all(v > 0 for v in values), \
             'Every value in layer_thickness_lst must be greater than 0.'
         return values
 
-    @validator('material_lst')
+    @field_validator('material_lst')
     def check_material_lst(cls, values):
         """Ensure every list item is a Material object."""
         assert all(isinstance(v, Material) for v in values), \
@@ -126,7 +124,7 @@ class CondType(str, Enum):
 class Building(NoExtraBaseModel):
     """Building object specifies building characteristics."""
 
-    type: constr(regex='^Building$') = 'Building'
+    type: str = Field('Building', pattern='^Building$')
 
     floor_height: float = Field(
         ...,
@@ -226,7 +224,7 @@ class Building(NoExtraBaseModel):
 
 class BEMDef(NoExtraBaseModel):
     """Building Energy Model (BEM) definition."""
-    type: constr(regex='^BEMDef$') = 'BEMDef'
+    type: str = Field('BEMDef', pattern='^BEMDef$')
 
     bldtype: str = Field(
         ...,
@@ -251,7 +249,7 @@ class BEMDef(NoExtraBaseModel):
         'building occupies in the UWG simulation.'
     )
 
-    @validator('builtera')
+    @field_validator('builtera')
     def check_builtera(cls, value):
         assert value in REF_BUILTERA_SET, \
             'The builtera must be one of {}.Got: {}.'.format(
@@ -281,7 +279,7 @@ class BEMDef(NoExtraBaseModel):
 class SchDef(NoExtraBaseModel):
     """Schedule definition class."""
 
-    type: constr(regex='^SchDef$') = 'SchDef'
+    type: str = Field('SchDef', pattern='^SchDef$')
 
     bldtype: str = Field(
         ...,
@@ -306,7 +304,7 @@ class SchDef(NoExtraBaseModel):
         'building occupies in the UWG simulation.'
     )
 
-    @validator('builtera')
+    @field_validator('builtera')
     def check_builtera(cls, value):
         assert value in REF_BUILTERA_SET, \
             'The builtera must be one of {}.Got: {}.'.format(
@@ -386,14 +384,16 @@ class SchDef(NoExtraBaseModel):
         description='Numerical value for maximum hot water rate per unit area [L/hr/m2].'
     )
 
-    @root_validator
-    def check_week_matrix_values(cls, values):
+    @model_validator(mode='after')
+    def check_week_matrix_values(self):
 
         schstrlst = ['elec', 'gas', 'light', 'occ', 'cool', 'heat', 'swh']
-        schlst = [values.get(schstr) for schstr in schstrlst]
 
-        for sch in schlst:
+        for schstr in schstrlst:
+            sch = getattr(self, schstr)
+            if sch is None:
+                continue
             _sch = [hr for day in sch for hr in day]
             assert all(isinstance(v, (float, int)) for v in _sch), \
-                'Every item in {} must be a number.'
-        return values
+                f'Every item in {schstr} must be a number.'
+        return self
