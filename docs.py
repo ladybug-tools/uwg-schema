@@ -1,6 +1,7 @@
 """generate openapi docs."""
 from pkg_resources import get_distribution
-from uwg_schema._openapi import get_openapi
+#from uwg_schema._openapi import get_openapi
+from pydantic_openapi_helper.core import get_openapi
 from uwg_schema.model import UWG
 
 import json
@@ -50,7 +51,9 @@ openapi = get_openapi(
     title='UWG Model Schema',
     description='This is the documentation for UWG model schema.',
     version=VERSION, info=info,
-    external_docs=external_docs)
+    inheritance=False,
+    external_docs=external_docs,
+    add_discriminator=False)
 # set the version default key in the UWG schema
 openapi['components']['schemas']['UWG']['properties']['version']['default'] = VERSION
 with open('./docs/uwg.json', 'w') as out_file:

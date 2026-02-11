@@ -1,5 +1,5 @@
 """UWG Model schema."""
-from pydantic import Field, validator, constr, conlist
+from pydantic import Field, field_validator, conlist
 from typing import List, Union
 
 from ._base import NoExtraBaseModel
@@ -28,11 +28,11 @@ DEFAULT_SCHTRAFFIC = [
 class UWG(NoExtraBaseModel):
     """Urban Weather Generator (UWG) class."""
 
-    type: constr(regex='^UWG$') = 'UWG'
+    type: str = Field('UWG', pattern='^UWG$')
 
     version: str = Field(
         default='0.0.0',
-        regex=r'([0-9]+)\.([0-9]+)\.([0-9]+)',
+        pattern=r'([0-9]+)\.([0-9]+)\.([0-9]+)',
         description='Text string for the current version of the schema.'
     )
 
@@ -82,7 +82,7 @@ class UWG(NoExtraBaseModel):
         '"6A", "6B", "7", "8".'
     )
 
-    @validator('zone')
+    @field_validator('zone')
     def check_zone(cls, value):
         assert value in REF_ZONETYPE_SET, \
             'The zone must be one of {}.Got: {}.'.format(
@@ -122,8 +122,8 @@ class UWG(NoExtraBaseModel):
 
     bld: conlist(
         conlist(
-            Union[float, str], min_items=3, max_items=3),
-        min_items=1) = Field(
+            Union[float, str], min_length=3, max_length=3),
+        min_length=1) = Field(
         default=DEFAULT_BLD,
         description='List of building types, eras, and fraction of urban building '
         'stock used during simulation. This consists of a nested array, with each inner '
@@ -139,7 +139,7 @@ class UWG(NoExtraBaseModel):
         'ref_bem_vector and ref_sch_vector arrays. The fractions should sum to one.'
     )
 
-    @ validator('bld')
+    @field_validator('bld')
     def check_bld(cls, value):
         """Ensure bld arrays have correct order of types."""
         total_frac = 0.0
@@ -308,7 +308,7 @@ class UWG(NoExtraBaseModel):
         'the day.'
     )
 
-    @validator('schtraffic')
+    @field_validator('schtraffic')
     def check_schtraffic(cls, values):
         """Ensure datatype of schtraffic values."""
         _values = [hr for day in values for hr in day]
@@ -384,7 +384,7 @@ class UWG(NoExtraBaseModel):
         description='Value for rural average obstacle height in meters.'
     )
 
-    shgc: float = Field(
+    shgc: Union[float, None] = Field(
         default=None,
         ge=0,
         le=1,
@@ -393,7 +393,7 @@ class UWG(NoExtraBaseModel):
         'from the refBEM.'
     )
 
-    albroof: float = Field(
+    albroof: Union[float, None] = Field(
         default=None,
         ge=0,
         le=1,
@@ -401,7 +401,7 @@ class UWG(NoExtraBaseModel):
         'is None, a unique albroof is set for each building from the refBEM.'
     )
 
-    glzr: float = Field(
+    glzr: Union[float, None] = Field(
         default=None,
         ge=0,
         le=1,
@@ -409,7 +409,7 @@ class UWG(NoExtraBaseModel):
         'is None, a unique glzr is set for each building from the refBEM.'
     )
 
-    vegroof: float = Field(
+    vegroof: Union[float, None] = Field(
         default=None,
         ge=0,
         le=1,
@@ -417,7 +417,7 @@ class UWG(NoExtraBaseModel):
         'a unique vegroof is set for each building from the refBEM.'
     )
 
-    albwall: float = Field(
+    albwall: Union[float, None] = Field(
         default=None,
         ge=0,
         le=1,
@@ -425,7 +425,7 @@ class UWG(NoExtraBaseModel):
         'None, a unique albwall is set for each building from the refBEM.'
     )
 
-    flr_h: float = Field(
+    flr_h: Union[float, None] = Field(
         default=None,
         ge=0,
         description='Average building floor height in meters. If value is None, a '

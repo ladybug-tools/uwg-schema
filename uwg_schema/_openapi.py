@@ -1,6 +1,5 @@
-from pydantic.utils import get_model
-from pydantic.schema import schema, get_flat_models_from_model, get_model_name_map
-from typing import Dict, List, Any
+from pydantic.json_schema import models_json_schema
+from typing import Dict, List, Any, Type
 import enum
 
 # base open api dictionary for all schemas
@@ -22,7 +21,7 @@ _base_open_api = {
 
 
 def get_openapi(
-    base_object: List[Any],
+    base_object: List[Type[Any]],
     title: str = None,
     version: str = None,
     openapi_version: str = "3.0.2",
@@ -55,7 +54,10 @@ def get_openapi(
     if external_docs:
         open_api['externalDocs'] = external_docs
 
-    schemas = schema(base_object, ref_prefix='#/components/schemas/')['definitions']
+    _, schemas = models_json_schema(
+        [(model, 'validation') for model in base_object],
+        ref_template='#/components/schemas/{model}'
+    )
 
     # goes to tags
     tags = []

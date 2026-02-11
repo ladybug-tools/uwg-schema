@@ -1,5 +1,5 @@
 """Base class for all objects requiring a valid names for all engines."""
-from pydantic import BaseModel, Field, Extra
+from pydantic import BaseModel, ConfigDict
 
 
 class NoExtraBaseModel(BaseModel):
@@ -7,6 +7,5 @@ class NoExtraBaseModel(BaseModel):
 
     This effectively includes all objects.
     """
-
-    class Config:
-        extra = Extra.forbid
+    
+    model_config = ConfigDict(extra='forbid')
